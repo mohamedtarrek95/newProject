@@ -31,7 +31,7 @@ export default function AdminLayout({ children }) {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <main className="py-8">
+      <main className="px-4 sm:px-6 lg:px-8">
         {children}
       </main>
     </div>

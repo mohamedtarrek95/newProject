@@ -12,6 +12,19 @@ body {
   background: rgb(var(--background-rgb));
 }
 
+/* RTL Support */
+[dir="rtl"] .rtl\:flip {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .text-start {
+  text-align: right;
+}
+
+[dir="rtl"] .text-end {
+  text-align: left;
+}
+
 @layer components {
   .btn-primary {
     @apply bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
@@ -32,4 +45,23 @@ body {
   .card {
     @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6;
   }
+}
+
+/* Custom scrollbar for tables */
+overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+
+overflow-x-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
 }

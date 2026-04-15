@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { rateAPI } from '@/lib/api';
 import { Button, Card, Spinner, Input } from '@/components/ui';
+import { useTranslations } from '@/components/TranslationsProvider';
 
 export default function AdminRatePage() {
   const [rate, setRate] = useState('');
@@ -11,6 +12,7 @@ export default function AdminRatePage() {
   const [updating, setUpdating] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const { t } = useTranslations();
 
   useEffect(() => {
     loadRate();
@@ -37,17 +39,17 @@ export default function AdminRatePage() {
     const rateValue = parseFloat(rate);
 
     if (isNaN(rateValue) || rateValue <= 0) {
-      setError('Please enter a valid positive number');
+      setError(t('adminRate.validRateError'));
       setUpdating(false);
       return;
     }
 
     try {
       await rateAPI.update({ rate: rateValue });
-      setMessage('Exchange rate updated successfully!');
+      setMessage(t('adminRate.rateUpdated'));
       setCurrentRate(rateValue);
     } catch (err) {
-      setError(err.message || 'Failed to update rate');
+      setError(err.message || t('adminRate.rateUpdateFailed'));
     } finally {
       setUpdating(false);
     }
@@ -62,62 +64,63 @@ export default function AdminRatePage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Set Exchange Rate</h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">{t('adminRate.title')}</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+        {/* Current Rate Card */}
         <Card>
-          <h2 className="text-xl font-semibold mb-6">Current Rate</h2>
+          <h2 className="text-lg sm:text-xl font-semibold mb-6">{t('adminRate.currentRate')}</h2>
 
-          <div className="text-4xl font-bold text-primary-600 mb-4">
-            {currentRate ? `EGP ${currentRate.toFixed(2)}` : 'Not Set'}
+          <div className="text-3xl sm:text-4xl font-bold text-primary-600 mb-4">
+            {currentRate ? `EGP ${currentRate.toFixed(2)}` : t('adminRate.notSet')}
           </div>
 
-          <p className="text-gray-600">
-            Current rate: EGP per USDT
+          <p className="text-gray-600 text-sm sm:text-base">
+            {t('adminRate.currentRate')}: EGP per USDT
           </p>
         </Card>
 
+        {/* Update Rate Card */}
         <Card>
-          <h2 className="text-xl font-semibold mb-6">Update Rate</h2>
+          <h2 className="text-lg sm:text-xl font-semibold mb-6">{t('adminRate.updateRate')}</h2>
 
           {message && (
-            <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg">
+            <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm sm:text-base">
               {message}
             </div>
           )}
 
           {error && (
-            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm sm:text-base">
               {error}
             </div>
           )}
 
           <form onSubmit={handleUpdate} className="space-y-4">
             <Input
-              label="Exchange Rate (EGP per USDT)"
+              label={t('adminRate.rateLabel')}
               type="number"
               step="0.01"
               min="0"
               value={rate}
               onChange={(e) => setRate(e.target.value)}
-              placeholder="Enter rate (e.g., 50.00)"
+              placeholder={t('adminRate.ratePlaceholder')}
               required
             />
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full text-sm sm:text-base"
               disabled={updating || !rate}
             >
-              {updating ? 'Updating...' : 'Update Rate'}
+              {updating ? t('adminRate.updating') : t('adminRate.updateRate')}
             </Button>
           </form>
 
           <div className="mt-6 p-4 bg-yellow-50 rounded-lg">
             <p className="text-sm text-yellow-800">
-              <strong>Note:</strong> Changing the rate will not affect existing orders.
-              Only new orders will use the updated rate.
+              <strong>{t('common.note') || 'Note'}:</strong> {t('adminRate.rateNote')}
             </p>
           </div>
         </Card>

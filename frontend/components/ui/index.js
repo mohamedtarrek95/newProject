@@ -30,7 +30,7 @@ export function Button({ children, variant = 'primary', size = 'md', className, 
   );
 }
 
-export function Input({ label, error, className, ...props }) {
+export function Input({ label, error, className, dir, ...props }) {
   return (
     <div className="space-y-1">
       {label && (
@@ -39,6 +39,7 @@ export function Input({ label, error, className, ...props }) {
         </label>
       )}
       <input
+        dir={dir || 'ltr'}
         className={clsx(
           'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-shadow',
           error ? 'border-red-500' : 'border-gray-300',
@@ -51,7 +52,7 @@ export function Input({ label, error, className, ...props }) {
   );
 }
 
-export function Select({ label, error, children, className, ...props }) {
+export function Select({ label, error, children, className, dir, ...props }) {
   return (
     <div className="space-y-1">
       {label && (
@@ -60,6 +61,7 @@ export function Select({ label, error, children, className, ...props }) {
         </label>
       )}
       <select
+        dir={dir || 'ltr'}
         className={clsx(
           'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-shadow',
           error ? 'border-red-500' : 'border-gray-300',
@@ -76,7 +78,7 @@ export function Select({ label, error, children, className, ...props }) {
 
 export function Card({ children, className, ...props }) {
   return (
-    <div className={clsx('bg-white rounded-xl shadow-sm border border-gray-100 p-6', className)} {...props}>
+    <div className={clsx('bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6', className)} {...props}>
       {children}
     </div>
   );
@@ -91,7 +93,7 @@ export function Badge({ children, variant = 'default', className }) {
   };
 
   return (
-    <span className={clsx('px-2 py-1 text-xs font-medium rounded-full', variants[variant], className)}>
+    <span className={clsx('px-2 py-0.5 sm:px-2 sm:py-1 text-xs font-medium rounded-full', variants[variant], className)}>
       {children}
     </span>
   );

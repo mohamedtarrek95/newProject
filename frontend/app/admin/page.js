@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthProvider';
 import { useRouter } from 'next/navigation';
-import { orderAPI, userAPI, transactionAPI } from '@/lib/api';
+import { orderAPI, userAPI } from '@/lib/api';
 import { Card, Spinner } from '@/components/ui';
+import { useTranslations } from '@/components/TranslationsProvider';
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -17,6 +18,7 @@ export default function AdminDashboard() {
     totalUsers: 0
   });
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslations();
 
   useEffect(() => {
     if (user && user.role !== 'admin') {
@@ -56,67 +58,77 @@ export default function AdminDashboard() {
   }
 
   const statCards = [
-    { title: 'Total Users', value: stats.totalUsers, color: 'text-blue-600' },
-    { title: 'Total Orders', value: stats.totalOrders, color: 'text-purple-600' },
-    { title: 'Pending Orders', value: stats.pendingOrders, color: 'text-yellow-600' },
-    { title: 'Approved Orders', value: stats.approvedOrders, color: 'text-green-600' },
-    { title: 'Rejected Orders', value: stats.rejectedOrders, color: 'text-red-600' }
+    { title: t('adminDashboard.totalUsers'), value: stats.totalUsers, color: 'text-blue-600' },
+    { title: t('adminDashboard.totalOrders'), value: stats.totalOrders, color: 'text-purple-600' },
+    { title: t('adminDashboard.pendingOrders'), value: stats.pendingOrders, color: 'text-yellow-600' },
+    { title: t('adminDashboard.approvedOrders'), value: stats.approvedOrders, color: 'text-green-600' },
+    { title: t('adminDashboard.rejectedOrders'), value: stats.rejectedOrders, color: 'text-red-600' }
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">{t('adminDashboard.title')}</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-6 sm:mb-8">
         {statCards.map((stat) => (
-          <Card key={stat.title}>
-            <p className="text-gray-600 mb-1">{stat.title}</p>
-            <p className={`text-3xl font-bold ${stat.color}`}>{stat.value}</p>
+          <Card key={stat.title} className="text-center p-4 sm:p-6">
+            <p className="text-gray-600 mb-1 text-xs sm:text-sm truncate">{stat.title}</p>
+            <p className={`text-2xl sm:text-3xl font-bold ${stat.color}`}>{stat.value}</p>
           </Card>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Quick Actions and System Status */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        {/* Quick Actions Card */}
         <Card>
-          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+          <h2 className="text-lg sm:text-xl font-semibold mb-4">{t('common.quickActions')}</h2>
           <div className="space-y-3">
-            <a href="/admin/orders">
-              <button className="w-full btn-primary text-left">
-                Manage Orders →
+            <a href="/admin/orders" className="block">
+              <button className="w-full btn-primary text-left text-sm sm:text-base">
+                {t('adminOrders.title')} →
               </button>
             </a>
-            <a href="/admin/users">
-              <button className="w-full btn-secondary text-left">
-                Manage Users →
+            <a href="/admin/users" className="block">
+              <button className="w-full btn-secondary text-left text-sm sm:text-base">
+                {t('adminUsers.title')} →
               </button>
             </a>
-            <a href="/admin/rate">
-              <button className="w-full btn-secondary text-left">
-                Set Exchange Rate →
+            <a href="/admin/rate" className="block">
+              <button className="w-full btn-secondary text-left text-sm sm:text-base">
+                {t('adminRate.title')} →
               </button>
             </a>
-            <a href="/admin/transactions">
-              <button className="w-full btn-secondary text-left">
-                View Transactions →
+            <a href="/admin/transactions" className="block">
+              <button className="w-full btn-secondary text-left text-sm sm:text-base">
+                {t('adminTransactions.title')} →
               </button>
             </a>
           </div>
         </Card>
 
+        {/* System Status Card */}
         <Card>
-          <h2 className="text-xl font-semibold mb-4">System Status</h2>
+          <h2 className="text-lg sm:text-xl font-semibold mb-4">{t('common.systemStatus')}</h2>
           <div className="space-y-3">
             <div className="flex justify-between items-center py-2 border-b">
-              <span className="text-gray-600">Database</span>
-              <span className="text-green-600">● Connected</span>
+              <span className="text-gray-600 text-sm sm:text-base">{t('common.database')}</span>
+              <span className="text-green-600 text-sm sm:text-base flex items-center gap-1">
+                <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                {t('common.connected')}
+              </span>
             </div>
             <div className="flex justify-between items-center py-2 border-b">
-              <span className="text-gray-600">API Status</span>
-              <span className="text-green-600">● Operational</span>
+              <span className="text-gray-600 text-sm sm:text-base">{t('common.apiStatus')}</span>
+              <span className="text-green-600 text-sm sm:text-base flex items-center gap-1">
+                <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                {t('common.operational')}
+              </span>
             </div>
             <div className="flex justify-between items-center py-2">
-              <span className="text-gray-600">Version</span>
-              <span className="font-semibold">1.0.0</span>
+              <span className="text-gray-600 text-sm sm:text-base">{t('common.version')}</span>
+              <span className="font-semibold text-sm sm:text-base">1.0.0</span>
             </div>
           </div>
         </Card>
