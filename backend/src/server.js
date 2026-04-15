@@ -15,12 +15,18 @@ const { errorHandler } = require('./middleware/errorHandler');
 const { logger } = require('./middleware/logger');
 
 const app = express();
+const PORT = process.env.PORT || 8080;
 
-// Basic middleware
-app.use(cors({
-  origin: 'http://localhost:3000',
+// CORS configuration
+const corsOptions = {
+  origin: process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',')
+    : ['http://localhost:3000'],
   credentials: true
-}));
+};
+app.use(cors(corsOptions));
+
+// Body parsing - must be before routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -37,7 +43,6 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// Auth rate limiting (stricter)
 const authLimiter = rateLimit({
   windowMs: isDev ? 60 * 1000 : 15 * 60 * 1000,
   max: isDev ? 1000 : 10,
@@ -48,36 +53,71 @@ app.use('/api/auth', authLimiter);
 // Logger middleware
 app.use(logger);
 
-// Routes
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/rate', rateRoutes);
 app.use('/api/transactions', transactionRoutes);
 
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+// Root route for Railway health check
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'ok' });
 });
 
-// Error handler
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'healthy' });
+});
+
+// Error handler - must be last
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
+// MongoDB connection with auto-retry (non-blocking)
+let mongoose = require('mongoose');
 
-const startServer = async () => {
+const connectWithRetry = async () => {
   try {
-    const mongoose = require('mongoose');
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('Connected to MongoDB');
-
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+    await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
     });
+    console.log('MongoDB connected successfully');
   } catch (error) {
-    console.error('Failed to connect to MongoDB:', error.message);
-    process.exit(1);
+    console.error('MongoDB connection failed (retrying in 5s):', error.message);
+    setTimeout(connectWithRetry, 5000);
   }
 };
 
-startServer();
+mongoose.connection.on('disconnected', () => {
+  console.warn('MongoDB disconnected. Reconnecting...');
+  connectWithRetry();
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB error:', err.message);
+});
+
+// Start server (non-blocking MongoDB connection)
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+// Graceful shutdown
+const gracefulShutdown = (signal) => {
+  console.log(`${signal} received. Shutting down gracefully...`);
+  server.close(() => {
+    console.log('HTTP server closed');
+    mongoose.connection.close(false, () => {
+      console.log('MongoDB connection closed');
+      process.exit(0);
+    });
+  });
+  setTimeout(() => process.exit(1), 10000);
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+// Connect to MongoDB (don't block server startup)
+connectWithRetry();
