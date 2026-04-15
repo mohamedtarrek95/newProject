@@ -24,8 +24,10 @@ const corsOptions = {
     : ['http://localhost:3000'],
   credentials: true
 };
-app.use(cors(corsOptions));
-
+app.use(cors({
+  origin: '*',
+  credentials: true
+}));
 // Body parsing - must be before routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
