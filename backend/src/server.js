@@ -17,17 +17,25 @@ const { logger } = require('./middleware/logger');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// CORS configuration
+// CORS configuration - single, production-ready setup
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
+  : [];
+
+if (allowedOrigins.length === 0 && process.env.NODE_ENV === 'production') {
+  throw new Error('ALLOWED_ORIGINS environment variable is required in production');
+}
+
 const corsOptions = {
-  origin: process.env.ALLOWED_ORIGINS
-    ? process.env.ALLOWED_ORIGINS.split(',')
-    : ['http://localhost:3000'],
-  credentials: true
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+  exposedHeaders: ['Set-Cookie'],
+  optionsSuccessStatus: 204
 };
-app.use(cors({
-  origin: '*',
-  credentials: true
-}));
+
+app.use(cors(corsOptions));
 // Body parsing - must be before routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
