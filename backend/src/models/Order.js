@@ -1,0 +1,48 @@
+const mongoose = require('mongoose');
+
+const orderSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'User ID is required']
+  },
+  type: {
+    type: String,
+    enum: ['EGP_TO_USDT', 'USDT_TO_EGP'],
+    required: [true, 'Order type is required']
+  },
+  amount: {
+    type: Number,
+    required: [true, 'Amount is required'],
+    min: [0.01, 'Amount must be greater than 0']
+  },
+  exchangeRate: {
+    type: Number,
+    required: [true, 'Exchange rate is required']
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending'
+  },
+  paymentProofUrl: {
+    type: String,
+    default: null
+  },
+  adminNotes: {
+    type: String,
+    trim: true
+  },
+  processedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
+  }
+}, {
+  timestamps: true
+});
+
+orderSchema.index({ userId: 1, createdAt: -1 });
+orderSchema.index({ status: 1 });
+
+module.exports = mongoose.model('Order', orderSchema);
