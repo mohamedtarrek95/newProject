@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { rateAPI } from '@/lib/api';
-import { Button, Card, Spinner, Input } from '@/components/ui';
+import { Button, Card, Spinner, Input, Alert } from '@/components/ui';
 import { useTranslations } from '@/components/TranslationsProvider';
 
 export default function AdminRatePage() {
@@ -57,7 +57,7 @@ export default function AdminRatePage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-[60vh]">
         <Spinner size="lg" />
       </div>
     );
@@ -65,39 +65,42 @@ export default function AdminRatePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">{t('adminRate.title')}</h1>
+      <div className="mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">{t('adminRate.title')}</h1>
+        <p className="text-surface-400">Set the current exchange rate</p>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         {/* Current Rate Card */}
-        <Card>
-          <h2 className="text-lg sm:text-xl font-semibold mb-6">{t('adminRate.currentRate')}</h2>
+        <Card premium>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-premium-500/10 rounded-full blur-[60px]" />
+          <div className="relative">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 rounded-lg bg-surface-700">
+                <svg className="w-5 h-5 text-premium-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+              <h2 className="text-lg font-semibold text-white">{t('adminRate.currentRate')}</h2>
+            </div>
 
-          <div className="text-3xl sm:text-4xl font-bold text-primary-600 mb-4">
-            {currentRate ? `EGP ${currentRate.toFixed(2)}` : t('adminRate.notSet')}
+            <div className="text-4xl sm:text-5xl font-bold mb-2">
+              <span className="text-white">EGP </span>
+              <span className="text-gradient">{currentRate ? currentRate.toFixed(2) : '--'}</span>
+            </div>
+
+            <p className="text-surface-500 text-sm">per USDT</p>
           </div>
-
-          <p className="text-gray-600 text-sm sm:text-base">
-            {t('adminRate.currentRate')}: EGP per USDT
-          </p>
         </Card>
 
         {/* Update Rate Card */}
         <Card>
-          <h2 className="text-lg sm:text-xl font-semibold mb-6">{t('adminRate.updateRate')}</h2>
+          <h2 className="text-lg font-semibold text-white mb-6">{t('adminRate.updateRate')}</h2>
 
-          {message && (
-            <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm sm:text-base">
-              {message}
-            </div>
-          )}
+          {message && <Alert variant="success" className="mb-4">{message}</Alert>}
+          {error && <Alert variant="error" className="mb-4">{error}</Alert>}
 
-          {error && (
-            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm sm:text-base">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleUpdate} className="space-y-4">
+          <form onSubmit={handleUpdate} className="space-y-5">
             <Input
               label={t('adminRate.rateLabel')}
               type="number"
@@ -111,17 +114,29 @@ export default function AdminRatePage() {
 
             <Button
               type="submit"
-              className="w-full text-sm sm:text-base"
+              className="w-full"
               disabled={updating || !rate}
             >
-              {updating ? t('adminRate.updating') : t('adminRate.updateRate')}
+              {updating ? (
+                <span className="flex items-center gap-2 justify-center">
+                  <span className="w-4 h-4 border-2 border-surface-900/30 border-t-surface-900 rounded-full animate-spin" />
+                  {t('adminRate.updating')}
+                </span>
+              ) : (
+                t('adminRate.updateRate')
+              )}
             </Button>
           </form>
 
-          <div className="mt-6 p-4 bg-yellow-50 rounded-lg">
-            <p className="text-sm text-yellow-800">
-              <strong>{t('common.note') || 'Note'}:</strong> {t('adminRate.rateNote')}
-            </p>
+          <div className="mt-6 p-4 rounded-lg bg-surface-700/50 border border-surface-600">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-premium-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className="text-sm text-surface-300">
+                <strong className="text-premium-400">{t('common.note')}:</strong> {t('adminRate.rateNote')}
+              </p>
+            </div>
           </div>
         </Card>
       </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { orderAPI } from '@/lib/api';
-import { Button, Card, Badge, Spinner } from '@/components/ui';
+import { Button, Card, Badge, Spinner, Alert } from '@/components/ui';
 import { useTranslations } from '@/components/TranslationsProvider';
 
 export default function OrderDetailPage() {
@@ -90,7 +90,7 @@ export default function OrderDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-[60vh]">
         <Spinner size="lg" />
       </div>
     );
@@ -99,8 +99,8 @@ export default function OrderDetailPage() {
   if (!order) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <Card className="text-center">
-          <p className="text-gray-600 mb-4 text-sm sm:text-base">{t('orderDetail.orderNotFound')}</p>
+        <Card className="text-center py-12">
+          <p className="text-surface-400 mb-4">{t('orderDetail.orderNotFound')}</p>
           <Button onClick={() => router.push('/dashboard/orders')}>{t('orderDetail.backToOrders')}</Button>
         </Card>
       </div>
@@ -111,71 +111,46 @@ export default function OrderDetailPage() {
     ? (order.amount / order.exchangeRate).toFixed(6)
     : (order.amount * order.exchangeRate).toFixed(2);
 
-  const getStatusKey = () => {
-    switch (order.status) {
-      case 'approved': return 'approved';
-      case 'rejected': return 'rejected';
-      default: return 'pending';
-    }
-  };
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <Button variant="secondary" onClick={() => router.push('/dashboard/orders')} className="mb-6 text-sm sm:text-base">
-        ← {t('orderDetail.backToOrders')}
+        <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+        {t('orderDetail.backToOrders')}
       </Button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         {/* Order Details Card */}
         <Card>
           <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
-            <h1 className="text-xl sm:text-2xl font-bold">{t('orderDetail.orderDetails')}</h1>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('orderDetail.orderDetails')}</h1>
+              <p className="text-surface-500 text-xs font-mono break-all">{order._id}</p>
+            </div>
             {getStatusBadge(order.status)}
           </div>
 
           <div className="space-y-4">
-            <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-              <span className="text-gray-600 text-sm sm:text-base">{t('orderDetail.orderId')}</span>
-              <span className="font-mono text-sm break-all">{order._id}</span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-              <span className="text-gray-600 text-sm sm:text-base">{t('orderDetail.exchangeType')}</span>
-              <span className="font-semibold text-sm sm:text-base">
-                {order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp')}
-              </span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-              <span className="text-gray-600 text-sm sm:text-base">{t('orderDetail.amount')}</span>
-              <span className="font-semibold text-sm sm:text-base">
-                {order.amount} {order.type === 'EGP_TO_USDT' ? 'EGP' : 'USDT'}
-              </span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-              <span className="text-gray-600 text-sm sm:text-base">{t('orderDetail.rate')}</span>
-              <span className="font-semibold text-sm sm:text-base">EGP {order.exchangeRate.toFixed(2)} / USDT</span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-              <span className="text-gray-600 text-sm sm:text-base">
-                {t('orderDetail.youWill')} {order.type === 'EGP_TO_USDT' ? t('orderDetail.receive') : t('orderDetail.pay')}
-              </span>
-              <span className="font-semibold text-primary-600 text-lg sm:text-xl">
-                {calculatedAmount} {order.type === 'EGP_TO_USDT' ? 'USDT' : 'EGP'}
-              </span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-              <span className="text-gray-600 text-sm sm:text-base">{t('orderDetail.created')}</span>
-              <span className="text-sm sm:text-base">{formatDate(order.createdAt)}</span>
-            </div>
+            {[
+              { label: t('orderDetail.exchangeType'), value: order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp') },
+              { label: t('orderDetail.amount'), value: `${order.amount} ${order.type === 'EGP_TO_USDT' ? 'EGP' : 'USDT'}` },
+              { label: t('orderDetail.rate'), value: `EGP ${order.exchangeRate.toFixed(2)} / USDT` },
+              { label: t('orderDetail.youWill') + ' ' + (order.type === 'EGP_TO_USDT' ? t('orderDetail.receive') : t('orderDetail.pay')), value: `${calculatedAmount} ${order.type === 'EGP_TO_USDT' ? 'USDT' : 'EGP'}`, highlight: true },
+              { label: t('orderDetail.created'), value: formatDate(order.createdAt) }
+            ].map((item, idx) => (
+              <div key={idx} className="flex flex-col sm:flex-row justify-between py-3 border-b border-surface-700 gap-2">
+                <span className="text-surface-400 text-sm">{item.label}</span>
+                <span className={`font-medium text-sm ${item.highlight ? 'text-gradient text-lg' : 'text-white'}`}>
+                  {item.value}
+                </span>
+              </div>
+            ))}
 
             {order.adminNotes && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-600">{t('orderDetail.adminNotes')}:</p>
-                <p className="mt-1 text-sm sm:text-base">{order.adminNotes}</p>
+              <div className="mt-4 p-4 rounded-lg bg-surface-700/50 border border-surface-600">
+                <p className="text-sm text-surface-400 mb-1">{t('orderDetail.adminNotes')}:</p>
+                <p className="text-sm text-white">{order.adminNotes}</p>
               </div>
             )}
           </div>
@@ -183,76 +158,98 @@ export default function OrderDetailPage() {
 
         {/* Payment Proof Card */}
         <Card>
-          <h2 className="text-lg sm:text-xl font-semibold mb-6">{t('orderDetail.paymentProof')}</h2>
+          <h2 className="text-lg font-semibold text-white mb-6">{t('orderDetail.paymentProof')}</h2>
 
           {order.paymentProofUrl ? (
             <div>
-              <p className="text-green-600 mb-4 text-sm sm:text-base flex items-center gap-2">
-                <span className="text-lg">✓</span> {t('orderDetail.proofUploadedCheck')}
-              </p>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </span>
+                <p className="text-emerald-400 text-sm font-medium">{t('orderDetail.proofUploadedCheck')}</p>
+              </div>
               <img
                 src={order.paymentProofUrl}
                 alt="Payment Proof"
-                className="w-full rounded-lg border max-h-96 object-contain"
+                className="w-full rounded-lg border border-surface-600 max-h-80 object-contain bg-surface-900"
               />
             </div>
           ) : order.status === 'pending' ? (
             <div>
-              <p className="text-gray-600 mb-4 text-sm sm:text-base">
+              <p className="text-surface-400 mb-6 text-sm">
                 {t('orderDetail.proofDesc')}
               </p>
 
-              {error && (
-                <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm sm:text-base">
-                  {error}
-                </div>
-              )}
-
-              {success && (
-                <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm sm:text-base">
-                  {success}
-                </div>
-              )}
+              {error && <Alert variant="error" className="mb-4">{error}</Alert>}
+              {success && <Alert variant="success" className="mb-4">{success}</Alert>}
 
               <div className="space-y-4">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileSelect}
-                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-600 hover:file:bg-primary-100"
-                />
+                <label className="block w-full cursor-pointer">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                  />
+                  <div className="border-2 border-dashed border-surface-600 rounded-lg p-6 text-center hover:border-surface-500 transition-colors duration-200">
+                    <svg className="w-8 h-8 text-surface-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <p className="text-sm text-surface-400">Click to upload payment proof</p>
+                    <p className="text-xs text-surface-500 mt-1">PNG, JPG up to 5MB</p>
+                  </div>
+                </label>
 
                 {selectedFile && (
-                  <div className="flex items-center gap-4 p-4 border rounded-lg">
+                  <div className="flex items-center gap-4 p-4 rounded-lg bg-surface-700/50 border border-surface-600">
                     <img
                       src={URL.createObjectURL(selectedFile)}
                       alt="Preview"
-                      className="w-16 h-16 sm:w-24 sm:h-24 object-cover rounded-lg border"
+                      className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-surface-500"
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm sm:text-base truncate">{selectedFile.name}</p>
-                      <p className="text-xs sm:text-sm text-gray-500">
+                      <p className="font-medium text-sm text-white truncate">{selectedFile.name}</p>
+                      <p className="text-xs text-surface-500">
                         {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                       </p>
                     </div>
+                    <button
+                      onClick={() => setSelectedFile(null)}
+                      className="p-2 text-surface-400 hover:text-red-400 transition-colors duration-200"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
                 )}
 
                 <Button
                   onClick={handleUpload}
                   disabled={!selectedFile || uploading}
-                  className="w-full text-sm sm:text-base"
+                  className="w-full"
                 >
-                  {uploading ? t('orderDetail.uploading') : t('orderDetail.uploadProofBtn')}
+                  {uploading ? (
+                    <span className="flex items-center gap-2 justify-center">
+                      <span className="w-4 h-4 border-2 border-surface-900/30 border-t-surface-900 rounded-full animate-spin" />
+                      {t('orderDetail.uploading')}
+                    </span>
+                  ) : (
+                    t('orderDetail.uploadProofBtn')
+                  )}
                 </Button>
               </div>
             </div>
           ) : (
-            <p className="text-gray-600 text-sm sm:text-base">
-              {order.status === 'rejected'
-                ? t('orderDetail.orderStatusResolved').replace('{status}', t('orderDetail.statusRejected'))
-                : t('orderDetail.noProofUploaded')}
-            </p>
+            <div className="text-center py-8">
+              <p className="text-surface-500 text-sm">
+                {order.status === 'rejected'
+                  ? t('orderDetail.orderStatusResolved').replace('{status}', t('orderDetail.statusRejected'))
+                  : t('orderDetail.noProofUploaded')}
+              </p>
+            </div>
           )}
         </Card>
       </div>

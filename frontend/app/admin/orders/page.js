@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { orderAPI } from '@/lib/api';
-import { Card, Badge, Spinner, Button } from '@/components/ui';
+import { Card, Badge, Spinner, Button, Alert } from '@/components/ui';
 import { useTranslations } from '@/components/TranslationsProvider';
 
 export default function AdminOrdersPage() {
@@ -87,7 +87,7 @@ export default function AdminOrdersPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-[60vh]">
         <Spinner size="lg" />
       </div>
     );
@@ -95,21 +95,24 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">{t('adminOrders.title')}</h1>
+      <div className="mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">{t('adminOrders.title')}</h1>
+        <p className="text-surface-400">Review and manage exchange orders</p>
+      </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-100 text-red-700 rounded-lg text-sm sm:text-base">{error}</div>
+        <Alert variant="error" className="mb-6">{error}</Alert>
       )}
 
       {/* Filter Card */}
-      <Card className="mb-4 sm:mb-6">
+      <Card className="mb-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
-            <span className="text-gray-600 text-sm sm:text-base whitespace-nowrap">{t('adminOrders.filterByStatus')}:</span>
+            <span className="text-surface-400 text-sm whitespace-nowrap">{t('adminOrders.filterByStatus')}:</span>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full sm:w-40 px-3 py-2 border rounded-lg text-sm sm:text-base"
+              className="w-full sm:w-40 input-field text-sm"
             >
               <option value="">{t('adminOrders.all')}</option>
               <option value="pending">{t('orders.status.pending')}</option>
@@ -117,93 +120,58 @@ export default function AdminOrdersPage() {
               <option value="rejected">{t('orders.status.rejected')}</option>
             </select>
           </div>
-          <span className="text-gray-600 text-sm sm:text-base whitespace-nowrap">
-            {t('common.total')}: {pagination.total} {t('adminOrders.ordersCount').replace('{count}', '').trim()}
+          <span className="text-surface-400 text-sm whitespace-nowrap">
+            Total: {pagination.total} orders
           </span>
         </div>
       </Card>
 
       {orders.length === 0 ? (
         <Card className="text-center py-12">
-          <p className="text-gray-600 text-sm sm:text-base">{t('common.noData')}</p>
+          <div className="w-16 h-16 rounded-full bg-surface-700 flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <p className="text-surface-400 text-sm">{t('common.noData')}</p>
         </Card>
       ) : (
-        <div className="overflow-x-auto -mx-4 sm:mx-0">
-          <div className="min-w-full">
-            <table className="w-full bg-white rounded-xl shadow-sm border border-gray-100">
-              <thead className="bg-gray-50 hidden sm:table-header-group">
+        <Card className="overflow-hidden p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-surface-700/50">
                 <tr>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('adminOrders.user')}</th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('adminOrders.type')}</th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('adminOrders.amount')}</th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('adminOrders.rate')}</th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('adminOrders.status')}</th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('adminOrders.date')}</th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('common.actions')}</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">User</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Type</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Amount</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Rate</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Status</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Date</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-surface-700">
                 {orders.map((order) => (
-                  <tr key={order._id} className="hover:bg-gray-50">
-                    {/* Mobile view */}
-                    <td className="sm:hidden px-4 py-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm font-medium">{order.userId?.email || 'Unknown'}</span>
-                          {getStatusBadge(order.status)}
-                        </div>
-                        <div className="flex justify-between items-center text-xs text-gray-500">
-                          <span>{order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp')}</span>
-                          <span>{formatDate(order.createdAt)}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm font-medium">{order.amount} {order.type === 'EGP_TO_USDT' ? 'EGP' : 'USDT'}</span>
-                          <span className="text-sm text-gray-500">EGP {order.exchangeRate?.toFixed(2) || 'N/A'}</span>
-                        </div>
-                        {order.status === 'pending' && (
-                          <div className="flex gap-2 pt-2">
-                            <Button
-                              variant="success"
-                              size="sm"
-                              onClick={() => handleApprove(order._id)}
-                              disabled={actionLoading === order._id}
-                              className="flex-1"
-                            >
-                              {actionLoading === order._id ? '...' : t('adminOrders.approve')}
-                            </Button>
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              onClick={() => handleReject(order._id)}
-                              disabled={actionLoading === order._id}
-                              className="flex-1"
-                            >
-                              {t('adminOrders.reject')}
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    {/* Desktop view */}
-                    <td className="hidden sm:table-cell px-6 py-4 text-sm text-gray-900">
+                  <tr key={order._id} className="hover:bg-surface-700/30 transition-colors duration-150">
+                    <td className="px-4 sm:px-6 py-4 text-sm text-white">
                       {order.userId?.email || 'Unknown'}
                     </td>
-                    <td className="hidden sm:table-cell px-6 py-4 text-sm text-gray-900">
+                    <td className="px-4 sm:px-6 py-4 text-sm text-surface-300">
                       {order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp')}
                     </td>
-                    <td className="hidden sm:table-cell px-6 py-4 text-sm font-medium text-gray-900">
+                    <td className="px-4 sm:px-6 py-4 text-sm font-medium text-white">
                       {order.amount} {order.type === 'EGP_TO_USDT' ? 'EGP' : 'USDT'}
                     </td>
-                    <td className="hidden sm:table-cell px-6 py-4 text-sm text-gray-500">
+                    <td className="px-4 sm:px-6 py-4 text-sm text-surface-400">
                       EGP {order.exchangeRate?.toFixed(2) || 'N/A'} / USDT
                     </td>
-                    <td className="hidden sm:table-cell px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4">
                       {getStatusBadge(order.status)}
                     </td>
-                    <td className="hidden sm:table-cell px-6 py-4 text-sm text-gray-500">
+                    <td className="px-4 sm:px-6 py-4 text-sm text-surface-400">
                       {formatDate(order.createdAt)}
                     </td>
-                    <td className="hidden sm:table-cell px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4">
                       {order.status === 'pending' && (
                         <div className="flex gap-2">
                           <Button
@@ -212,7 +180,7 @@ export default function AdminOrdersPage() {
                             onClick={() => handleApprove(order._id)}
                             disabled={actionLoading === order._id}
                           >
-                            {actionLoading === order._id ? '...' : t('adminOrders.approve')}
+                            {actionLoading === order._id ? '...' : 'Approve'}
                           </Button>
                           <Button
                             variant="danger"
@@ -220,7 +188,7 @@ export default function AdminOrdersPage() {
                             onClick={() => handleReject(order._id)}
                             disabled={actionLoading === order._id}
                           >
-                            {t('adminOrders.reject')}
+                            Reject
                           </Button>
                         </div>
                       )}
@@ -230,7 +198,7 @@ export default function AdminOrdersPage() {
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );

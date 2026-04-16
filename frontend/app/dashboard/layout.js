@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-surface-900 flex items-center justify-center">
         <Spinner size="lg" />
       </div>
     );
@@ -29,9 +29,9 @@ export default function DashboardLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface-900">
       <Navbar />
-      <main className="px-4 sm:px-6 lg:px-8">
+      <main>
         {children}
       </main>
     </div>

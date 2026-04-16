@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { orderAPI } from '@/lib/api';
-import { Button, Card, Badge, Spinner } from '@/components/ui';
+import { Button, Card, Badge, Spinner, Alert } from '@/components/ui';
 import { useTranslations } from '@/components/TranslationsProvider';
 
 export default function AdminOrderDetailPage() {
@@ -93,7 +93,7 @@ export default function AdminOrderDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-[60vh]">
         <Spinner size="lg" />
       </div>
     );
@@ -102,8 +102,8 @@ export default function AdminOrderDetailPage() {
   if (!order) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <Card className="text-center">
-          <p className="text-gray-600 mb-4 text-sm sm:text-base">{t('orderDetail.orderNotFound')}</p>
+        <Card className="text-center py-12">
+          <p className="text-surface-400 mb-4">{t('orderDetail.orderNotFound')}</p>
           <Button onClick={() => router.push('/admin/orders')}>{t('orderDetail.backToOrders')}</Button>
         </Card>
       </div>
@@ -125,68 +125,45 @@ export default function AdminOrderDetailPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <Button variant="secondary" onClick={() => router.push('/admin/orders')} className="mb-6 text-sm sm:text-base">
-        ← {t('orderDetail.backToOrders')}
+        <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+        {t('orderDetail.backToOrders')}
       </Button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         {/* Order Details Card */}
         <Card>
           <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
-            <h1 className="text-xl sm:text-2xl font-bold">{t('orderDetail.orderDetails')}</h1>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('orderDetail.orderDetails')}</h1>
+              <p className="text-surface-500 text-xs font-mono break-all">{order._id}</p>
+            </div>
             {getStatusBadge(order.status)}
           </div>
 
           <div className="space-y-4">
-            <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-              <span className="text-gray-600 text-sm sm:text-base">{t('orderDetail.orderId')}</span>
-              <span className="font-mono text-sm break-all">{order._id}</span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-              <span className="text-gray-600 text-sm sm:text-base">{t('orderDetail.user')}</span>
-              <span className="text-sm sm:text-base">
-                {order.userId?.email} <br />
-                <span className="text-sm text-gray-500">
-                  {order.userId?.firstName} {order.userId?.lastName}
+            {[
+              { label: t('orderDetail.user'), value: order.userId?.email, sub: `${order.userId?.firstName} ${order.userId?.lastName}` },
+              { label: t('orderDetail.exchangeType'), value: order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp') },
+              { label: t('orderDetail.amount'), value: `${order.amount} ${order.type === 'EGP_TO_USDT' ? 'EGP' : 'USDT'}` },
+              { label: t('orderDetail.rate'), value: `EGP ${order.exchangeRate.toFixed(2)} / USDT` },
+              { label: t('orderDetail.convertedAmount'), value: `${calculatedAmount} ${order.type === 'EGP_TO_USDT' ? 'USDT' : 'EGP'}`, highlight: true },
+              { label: t('orderDetail.created'), value: formatDate(order.createdAt) }
+            ].map((item, idx) => (
+              <div key={idx} className="flex flex-col sm:flex-row justify-between py-3 border-b border-surface-700 gap-2">
+                <span className="text-surface-400 text-sm">{item.label}</span>
+                <span className={`font-medium text-sm ${item.highlight ? 'text-gradient' : 'text-white'}`}>
+                  {item.value}
+                  {item.sub && <span className="text-surface-500 block text-xs mt-1">{item.sub}</span>}
                 </span>
-              </span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-              <span className="text-gray-600 text-sm sm:text-base">{t('orderDetail.exchangeType')}</span>
-              <span className="font-semibold text-sm sm:text-base">
-                {order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp')}
-              </span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-              <span className="text-gray-600 text-sm sm:text-base">{t('orderDetail.amount')}</span>
-              <span className="font-semibold text-sm sm:text-base">
-                {order.amount} {order.type === 'EGP_TO_USDT' ? 'EGP' : 'USDT'}
-              </span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-              <span className="text-gray-600 text-sm sm:text-base">{t('orderDetail.rate')}</span>
-              <span className="font-semibold text-sm sm:text-base">EGP {order.exchangeRate.toFixed(2)} / USDT</span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-              <span className="text-gray-600 text-sm sm:text-base">{t('orderDetail.convertedAmount')}</span>
-              <span className="font-semibold text-primary-600 text-sm sm:text-base">
-                {calculatedAmount} {order.type === 'EGP_TO_USDT' ? 'USDT' : 'EGP'}
-              </span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-              <span className="text-gray-600 text-sm sm:text-base">{t('orderDetail.created')}</span>
-              <span className="text-sm sm:text-base">{formatDate(order.createdAt)}</span>
-            </div>
+              </div>
+            ))}
 
             {order.processedBy && (
-              <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-                <span className="text-gray-600 text-sm sm:text-base">{t('orderDetail.processedBy')}</span>
-                <span className="text-sm sm:text-base">{order.processedBy.email}</span>
+              <div className="flex flex-col sm:flex-row justify-between py-3 border-b border-surface-700 gap-2">
+                <span className="text-surface-400 text-sm">{t('orderDetail.processedBy')}</span>
+                <span className="text-sm text-white">{order.processedBy.email}</span>
               </div>
             )}
           </div>
@@ -194,31 +171,22 @@ export default function AdminOrderDetailPage() {
 
         {/* Admin Actions Card */}
         <Card>
-          <h2 className="text-lg sm:text-xl font-semibold mb-6">{t('orderDetail.adminActions')}</h2>
+          <h2 className="text-lg font-semibold text-white mb-6">{t('orderDetail.adminActions')}</h2>
 
-          {error && (
-            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm sm:text-base">
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm sm:text-base">
-              {success}
-            </div>
-          )}
+          {error && <Alert variant="error" className="mb-4">{error}</Alert>}
+          {success && <Alert variant="success" className="mb-4">{success}</Alert>}
 
           {order.status === 'pending' ? (
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('orderDetail.adminNotesRequired')}
+                <label className="block text-sm font-medium text-surface-300 mb-2">
+                  Admin Notes {order.status === 'pending' && <span className="text-red-400">*</span>}
                 </label>
                 <textarea
                   value={adminNotes}
                   onChange={(e) => setAdminNotes(e.target.value)}
-                  placeholder={t('orderDetail.adminNotes') + "..."}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none text-sm sm:text-base"
+                  placeholder="Enter notes about this order..."
+                  className="w-full bg-surface-800 border border-surface-600 text-white px-4 py-3 rounded-lg focus:ring-2 focus:ring-premium-500 focus:border-transparent outline-none text-sm sm:text-base resize-none"
                   rows="4"
                 />
               </div>
@@ -228,49 +196,63 @@ export default function AdminOrderDetailPage() {
                   variant="success"
                   onClick={handleApprove}
                   disabled={processing}
-                  className="flex-1 text-sm sm:text-base"
+                  className="flex-1"
                 >
-                  {processing ? t('orderDetail.processing') : t('orderDetail.approveOrder')}
+                  {processing ? (
+                    <span className="flex items-center gap-2 justify-center">
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Processing...
+                    </span>
+                  ) : (
+                    t('orderDetail.approveOrder')
+                  )}
                 </Button>
                 <Button
                   variant="danger"
                   onClick={handleReject}
                   disabled={processing}
-                  className="flex-1 text-sm sm:text-base"
+                  className="flex-1"
                 >
-                  {processing ? t('orderDetail.processing') : t('orderDetail.rejectOrder')}
+                  {processing ? (
+                    <span className="flex items-center gap-2 justify-center">
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Processing...
+                    </span>
+                  ) : (
+                    t('orderDetail.rejectOrder')
+                  )}
                 </Button>
               </div>
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-600 mb-2">{t('orderDetail.orderStatus')}:</p>
-                <p className="font-semibold text-lg">
+              <div className="p-4 rounded-lg bg-surface-700/50 border border-surface-600">
+                <p className="text-sm text-surface-400 mb-2">Order Status:</p>
+                <p className="font-semibold text-lg text-white">
                   {t('orderDetail.orderStatusResolved').replace('{status}', t(`orderDetail.status${getStatusKey().charAt(0).toUpperCase() + getStatusKey().slice(1)}`))}
                 </p>
               </div>
 
               {order.adminNotes && (
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-2">{t('orderDetail.adminNotes')}:</p>
-                  <p className="text-sm sm:text-base">{order.adminNotes}</p>
+                <div className="p-4 rounded-lg bg-surface-700/50 border border-surface-600">
+                  <p className="text-sm text-surface-400 mb-2">{t('orderDetail.adminNotes')}:</p>
+                  <p className="text-sm text-white">{order.adminNotes}</p>
                 </div>
               )}
             </div>
           )}
 
           {/* Payment Proof Section */}
-          <div className="mt-6 pt-6 border-t">
-            <h3 className="font-semibold mb-4 text-sm sm:text-base">{t('orderDetail.paymentProof')}</h3>
+          <div className="mt-6 pt-6 border-t border-surface-700">
+            <h3 className="font-semibold mb-4 text-sm sm:text-base text-white">{t('orderDetail.paymentProof')}</h3>
             {order.paymentProofUrl ? (
               <img
                 src={order.paymentProofUrl}
                 alt="Payment Proof"
-                className="w-full rounded-lg border max-h-96 object-contain"
+                className="w-full rounded-lg border border-surface-600 max-h-80 object-contain bg-surface-900"
               />
             ) : (
-              <p className="text-gray-500 text-sm sm:text-base">{t('orderDetail.noProofUploaded')}</p>
+              <p className="text-surface-500 text-sm">{t('orderDetail.noProofUploaded')}</p>
             )}
           </div>
         </Card>

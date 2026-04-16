@@ -11,12 +11,19 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+    <nav className="bg-surface-800/80 backdrop-blur-xl border-b border-surface-700 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="text-xl font-bold text-primary-600 flex-shrink-0">
-            EGP-USDT Exchange
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-premium-400 to-premium-600 flex items-center justify-center shadow-premium-glow group-hover:shadow-premium-glow-lg transition-shadow duration-200">
+              <svg className="w-5 h-5 text-surface-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-white to-surface-300 bg-clip-text text-transparent">
+              EGP-USDT
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -26,19 +33,21 @@ export default function Navbar() {
             {user ? (
               <>
                 {user.role === 'admin' && (
-                  <Link href="/admin" className="text-gray-600 hover:text-gray-900 font-medium">
+                  <Link href="/admin" className="text-surface-300 hover:text-premium-400 font-medium transition-colors duration-200">
                     Admin
                   </Link>
                 )}
-                <Link href="/dashboard" className="text-gray-600 hover:text-gray-900 font-medium">
+                <Link href="/dashboard" className="text-surface-300 hover:text-white font-medium transition-colors duration-200">
                   Dashboard
                 </Link>
-                <span className="text-gray-500 text-sm">
-                  {user.email}
-                </span>
-                <Button variant="secondary" size="sm" onClick={logout}>
-                  Logout
-                </Button>
+                <div className="flex items-center gap-3 pl-4 border-l border-surface-700">
+                  <span className="text-surface-400 text-sm max-w-[150px] truncate">
+                    {user.email}
+                  </span>
+                  <Button variant="secondary" size="sm" onClick={logout}>
+                    Logout
+                  </Button>
+                </div>
               </>
             ) : (
               <>
@@ -57,7 +66,7 @@ export default function Navbar() {
             <LanguageSwitcher className="scale-90" />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="p-2 rounded-lg text-surface-400 hover:text-white hover:bg-surface-700 focus:outline-none focus:ring-2 focus:ring-premium-500 transition-all duration-200"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? (
@@ -76,15 +85,16 @@ export default function Navbar() {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white">
+        <div className="md:hidden border-t border-surface-700 bg-surface-800/95 backdrop-blur-xl animate-in">
           <div className="px-4 py-4 space-y-3">
             {user ? (
               <>
-                <div className="text-sm text-gray-500 px-2">{user.email}</div>
+                <div className="text-sm text-surface-400 px-2 py-1">{user.email}</div>
+                <div className="h-px bg-surface-700 my-3" />
                 {user.role === 'admin' && (
                   <Link
                     href="/admin"
-                    className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 font-medium"
+                    className="block px-3 py-2.5 rounded-lg text-surface-300 hover:bg-surface-700 hover:text-white font-medium transition-all duration-200"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Admin
@@ -92,7 +102,7 @@ export default function Navbar() {
                 )}
                 <Link
                   href="/dashboard"
-                  className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 font-medium"
+                  className="block px-3 py-2.5 rounded-lg text-surface-300 hover:bg-surface-700 hover:text-white font-medium transition-all duration-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Dashboard
