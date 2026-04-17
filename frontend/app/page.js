@@ -71,7 +71,7 @@ export default function HomePage() {
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
               <span className="text-white">Exchange </span>
               <span className="bg-gradient-to-r from-premium-400 via-premium-500 to-premium-600 bg-clip-text text-transparent">
-                EGP
+                Currency
               </span>
               <span className="text-white"> to </span>
               <span className="bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 bg-clip-text text-transparent">

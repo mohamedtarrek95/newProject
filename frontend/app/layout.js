@@ -2,8 +2,8 @@ import './globals.css';
 import Providers from '@/components/Providers';
 
 export const metadata = {
-  title: 'EGP-USDT Exchange | Premium Crypto Exchange Platform',
-  description: 'Secure and reliable EGP to USDT cryptocurrency exchange platform with real-time rates and instant processing.',
+  title: 'USDT-Worldwide | Premium Crypto Exchange Platform',
+  description: 'Secure and reliable currency to USDT cryptocurrency exchange platform with real-time rates and instant processing.',
   icons: {
     icon: [
       {

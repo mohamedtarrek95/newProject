@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "USDT Exchange",
+    "appName": "USDT-Worldwide",
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
@@ -34,7 +34,7 @@
     "currencies": "Currencies"
   },
   "auth": {
-    "loginTitle": "Login to EGP-USDT Exchange",
+    "loginTitle": "Login to USDT-Worldwide",
     "registerTitle": "Create Account",
     "email": "Email",
     "password": "Password",
@@ -56,8 +56,8 @@
     "newOrder": "New Order"
   },
   "landing": {
-    "heroTitle": "EGP-USDT Cryptocurrency Exchange",
-    "heroDescription": "A peer-to-admin exchange platform for converting between Egyptian Pounds (EGP) and USDT. Simple, secure, and manually approved for your safety.",
+    "heroTitle": "Currency to USDT Exchange",
+    "heroDescription": "A direct, user-to-user exchange platform for converting Egyptian Pounds (and other currencies) to USDT. Easy to use, secure, and subject to manual approval to ensure your safety.",
     "getStarted": "Get Started",
     "login": "Login",
     "secure": "Secure",
@@ -70,12 +70,12 @@
     "step1Title": "Register",
     "step1Desc": "Create an account",
     "step2Title": "Create Order",
-    "step2Desc": "Select EGP to USDT or vice versa",
+    "step2Desc": "Select currency to USDT or vice versa",
     "step3Title": "Upload Proof",
     "step3Desc": "Submit payment proof",
     "step4Title": "Get Approved",
     "step4Desc": "Admin approves and you receive funds",
-    "copyright": "2024 EGP-USDT Exchange. All rights reserved."
+    "copyright": "2024 USDT-Worldwide. All rights reserved."
   },
   "dashboard": {
     "title": "Dashboard",

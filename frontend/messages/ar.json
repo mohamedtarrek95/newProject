@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "تبادل USDT",
+    "appName": "USDT-Worldwide",
     "login": "تسجيل الدخول",
     "register": "التسجيل",
     "logout": "تسجيل الخروج",
@@ -34,7 +34,7 @@
     "currencies": "العملات"
   },
   "auth": {
-    "loginTitle": "تسجيل الدخول إلى EGP-USDT Exchange",
+    "loginTitle": "تسجيل الدخول إلى USDT-Worldwide",
     "registerTitle": "إنشاء حساب",
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
@@ -56,8 +56,8 @@
     "newOrder": "طلب جديد"
   },
   "landing": {
-    "heroTitle": "تبادل العملات المشفرة EGP-USDT",
-    "heroDescription": "منصة تبادل نظير للإدارة لتحويل الجنيه المصري (EGP) و USDT. بسيط وآمن وموافق عليه يدويًا لسلامتك.",
+    "heroTitle": "تبادل العملات إلى USDT",
+    "heroDescription": "منصة تبادل مباشرة بين المستخدمين لتحويل الجنيه المصري (عملات أخرى) إلى USDT. سهلة الاستخدام، آمنة، وتخضع للموافقة اليدوية لضمان سلامتك.",
     "getStarted": "ابدأ الآن",
     "login": "تسجيل الدخول",
     "secure": "آمن",
@@ -70,12 +70,12 @@
     "step1Title": "التسجيل",
     "step1Desc": "إنشاء حساب",
     "step2Title": "إنشاء طلب",
-    "step2Desc": "اختر EGP إلى USDT أو العكس",
+    "step2Desc": "اختر العملة إلى USDT أو العكس",
     "step3Title": "رفع الإثبات",
     "step3Desc": "قدم دليل الدفع",
     "step4Title": "الحصول على الموافقة",
     "step4Desc": "الموافقة من الإدارة وتستلم الأموال",
-    "copyright": "2024 EGP-USDT Exchange. جميع الحقوق محفوظة."
+    "copyright": "2024 USDT-Worldwide. جميع الحقوق محفوظة."
   },
   "dashboard": {
     "title": "لوحة التحكم",
