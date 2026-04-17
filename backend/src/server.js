@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const app = express();
+
 app.set('trust proxy', 1);
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -16,7 +18,6 @@ const transactionRoutes = require('./routes/transactions');
 const { errorHandler } = require('./middleware/errorHandler');
 const { logger } = require('./middleware/logger');
 
-const app = express();
 const PORT = process.env.PORT || 8080;
 
 // CORS configuration - single, production-ready setup
