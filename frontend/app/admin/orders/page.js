@@ -114,7 +114,6 @@ export default function AdminOrdersPage() {
         <Alert variant="error" className="mb-6">{error}</Alert>
       )}
 
-      {/* Filter Card */}
       <Card className="mb-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
@@ -227,60 +226,83 @@ export default function AdminOrdersPage() {
                     {expandedRow === order._id && (
                       <tr>
                         <td colSpan="8" className="px-4 sm:px-6 py-4 bg-surface-800/50">
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {/* Payment Screenshot */}
-                            {order.paymentProof && (
-                              <div className="space-y-2">
-                                <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider">Payment Screenshot</h4>
-                                <div
-                                  className="cursor-pointer hover:opacity-80 transition-opacity"
-                                  onClick={() => setLightboxImage(order.paymentProof)}
+                          <div className="space-y-4">
+                            <h3 className="text-sm font-semibold text-white">Order Details</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                              {order.paymentProof && (
+                                <Card className="p-4">
+                                  <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    Payment Proof
+                                  </h4>
+                                  <div
+                                    className="cursor-pointer hover:opacity-80 transition-opacity"
+                                    onClick={() => setLightboxImage(order.paymentProof)}
+                                  >
+                                    <img
+                                      src={order.paymentProof}
+                                      alt="Payment proof"
+                                      className="h-32 w-full rounded border border-surface-600 object-cover"
+                                    />
+                                    <p className="text-xs text-surface-400 mt-2 text-center">Click to enlarge</p>
+                                  </div>
+                                </Card>
+                              )}
+                              {order.type === 'BUY_USDT' && (
+                                <Card className="p-4">
+                                  <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                    Wallet Address (USDT Transfer Destination)
+                                  </h4>
+                                  <div className="bg-surface-900 rounded p-3 border border-surface-700">
+                                    <code className="text-sm text-cyan-400 break-all font-mono">
+                                      {order.walletAddress || 'N/A'}
+                                    </code>
+                                  </div>
+                                </Card>
+                              )}
+                              {order.type === 'BUY_USDT' && (
+                                <Card className="p-4">
+                                  <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                                    </svg>
+                                    Network Information
+                                  </h4>
+                                  <div className="bg-surface-900 rounded p-3 border border-surface-700">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-sm text-cyan-400">Network:</span>
+                                      <span className="text-sm font-medium text-white">Plasma</span>
+                                    </div>
+                                    <p className="text-xs text-surface-400 mt-2">
+                                      Note: USDT purchases are processed on Plasma network
+                                    </p>
+                                  </div>
+                                </Card>
+                              )}
+                              <Card className="p-4">
+                                <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                  </svg>
+                                  Contact Support
+                                </h4>
+                                <Button
+                                  variant="primary"
+                                  size="md"
+                                  className="w-full"
+                                  onClick={handleTelegramContact}
                                 >
-                                  <img
-                                    src={order.paymentProof}
-                                    alt="Payment proof"
-                                    className="h-24 w-auto rounded border border-surface-600 object-cover"
-                                  />
-                                  <p className="text-xs text-surface-500 mt-1">Click to enlarge</p>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Wallet Address - Only for BUY_USDT */}
-                            {order.type === 'BUY_USDT' && (
-                              <div className="space-y-2">
-                                <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider">Wallet Address</h4>
-                                <div className="bg-surface-900 rounded p-2 border border-surface-700">
-                                  <code className="text-sm text-cyan-400 break-all">
-                                    {order.walletAddress || 'N/A'}
-                                  </code>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Network Info - Only for BUY_USDT */}
-                            {order.type === 'BUY_USDT' && (
-                              <div className="space-y-2">
-                                <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider">Network</h4>
-                                <div className="bg-surface-900 rounded p-2 border border-surface-700">
-                                  <span className="text-sm text-cyan-400">Plasma</span>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Telegram Contact */}
-                            <div className="space-y-2">
-                              <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider">Contact</h4>
-                              <Button
-                                variant="primary"
-                                size="sm"
-                                onClick={handleTelegramContact}
-                              >
-                                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-.896.563-2.594.936-.838.184-1.555.277-2.372.104-.041-.008-.135-.033-.269.053-.269.167-.432.461-.488.601-.064.167.004.25.138.334.134.083.585.249 1.375.523 1.52.529 2.655 1.005 2.717 1.029.062.025.121.038.162.016.177-.087 2.125-2.096 2.207-2.296.015-.037.032-.135.015-.201-.017-.065-.079-.138-.173-.194-.155-.093-.41-.061-.563-.036z"/>
-                                </svg>
-                                Contact on Telegram
-                              </Button>
+                                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-.896.563-2.594.936-.838.184-1.555.277-2.372.104-.041-.008-.135-.033-.269.053-.269.167-.432.461-.488.601-.064.167.004.25.138.334.134.083.585.249 1.375.523 1.52.529 2.655 1.005 2.717 1.029.062.025.121.038.162.016.177-.087 2.125-2.096 2.207-2.296.015-.037.032-.135.015-.201-.017-.065-.079-.138-.173-.194-.155-.093-.41-.061-.563-.036z"/>
+                                  </svg>
+                                  Contact on Telegram
+                                </Button>
+                              </Card>
                             </div>
                           </div>
                         </td>
@@ -294,7 +316,6 @@ export default function AdminOrdersPage() {
         </Card>
       )}
 
-      {/* Lightbox for payment screenshot */}
       {lightboxImage && (
         <div
           className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
