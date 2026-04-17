@@ -28,6 +28,8 @@ export default function ExchangePage() {
   const { t } = useTranslations();
   const { user } = useAuth();
 
+  const isBuyOrder = type === 'BUY_USDT';
+
   useEffect(() => {
     loadCurrencies();
   }, []);
