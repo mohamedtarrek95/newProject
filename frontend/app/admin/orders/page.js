@@ -91,10 +91,7 @@ export default function AdminOrdersPage() {
     setExpandedRow(expandedRow === orderId ? null : orderId);
   };
 
-  const handleTelegramContact = () => {
-    window.open('https://t.me/Hosssam95', '_blank');
-  };
-
+  
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -265,44 +262,6 @@ export default function AdminOrdersPage() {
                                   </div>
                                 </Card>
                               )}
-                              {order.type === 'BUY_USDT' && (
-                                <Card className="p-4">
-                                  <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                                    </svg>
-                                    Network Information
-                                  </h4>
-                                  <div className="bg-surface-900 rounded p-3 border border-surface-700">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-sm text-cyan-400">Network:</span>
-                                      <span className="text-sm font-medium text-white">Plasma</span>
-                                    </div>
-                                    <p className="text-xs text-surface-400 mt-2">
-                                      Note: USDT purchases are processed on Plasma network
-                                    </p>
-                                  </div>
-                                </Card>
-                              )}
-                              <Card className="p-4">
-                                <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                  </svg>
-                                  Contact Support
-                                </h4>
-                                <Button
-                                  variant="primary"
-                                  size="md"
-                                  className="w-full"
-                                  onClick={handleTelegramContact}
-                                >
-                                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-.896.563-2.594.936-.838.184-1.555.277-2.372.104-.041-.008-.135-.033-.269.053-.269.167-.432.461-.488.601-.064.167.004.25.138.334.134.083.585.249 1.375.523 1.52.529 2.655 1.005 2.717 1.029.062.025.121.038.162.016.177-.087 2.125-2.096 2.207-2.296.015-.037.032-.135.015-.201-.017-.065-.079-.138-.173-.194-.155-.093-.41-.061-.563-.036z"/>
-                                  </svg>
-                                  Contact on Telegram
-                                </Button>
-                              </Card>
                             </div>
                           </div>
                         </td>
