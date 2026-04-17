@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import { orderAPI } from '@/lib/api';
 import { Card, Badge, Spinner, Button, Alert } from '@/components/ui';
 import { useTranslations } from '@/components/TranslationsProvider';
@@ -11,7 +11,9 @@ export default function AdminOrdersPage() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
   const [actionLoading, setActionLoading] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
+  const [expandedRow, setExpandedRow] = useState(null);
+  const [lightboxImage, setLightboxImage] = useState(null);
   const { t } = useTranslations();
 
   useEffect(() => {
@@ -85,6 +87,14 @@ export default function AdminOrdersPage() {
     });
   };
 
+  const toggleRow = (orderId) => {
+    setExpandedRow(expandedRow === orderId ? null : orderId);
+  };
+
+  const handleTelegramContact = () => {
+    window.open('https://t.me/Hosssam95', '_blank');
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -141,6 +151,7 @@ export default function AdminOrdersPage() {
             <table className="w-full">
               <thead className="bg-surface-700/50">
                 <tr>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider w-10"></th>
                   <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">User</th>
                   <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Type</th>
                   <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Amount</th>
@@ -152,56 +163,160 @@ export default function AdminOrdersPage() {
               </thead>
               <tbody className="divide-y divide-surface-700">
                 {orders.map((order) => (
-                  <tr key={order._id} className="hover:bg-surface-700/30 transition-colors duration-150">
-                    <td className="px-4 sm:px-6 py-4 text-sm text-white">
-                      {order.userId?.email || 'Unknown'}
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 text-sm text-surface-300">
-                      <div>
-                        {order.type === 'BUY_USDT' ? t('orders.type.buy_usdt') : order.type === 'SELL_USDT' ? t('orders.type.sell_usdt') : order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp')}
-                      </div>
-                      <div className="text-xs text-surface-500">{order.currency}</div>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 text-sm font-medium text-white">
-                      {order.amount} {order.currency}
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 text-sm text-surface-400">
-                      {order.currency} {order.exchangeRate?.toFixed(2) || 'N/A'} / USDT
-                    </td>
-                    <td className="px-4 sm:px-6 py-4">
-                      {getStatusBadge(order.status)}
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 text-sm text-surface-400">
-                      {formatDate(order.createdAt)}
-                    </td>
-                    <td className="px-4 sm:px-6 py-4">
-                      {order.status === 'pending' && (
-                        <div className="flex gap-2">
-                          <Button
-                            variant="success"
-                            size="sm"
-                            onClick={() => handleApprove(order._id)}
-                            disabled={actionLoading === order._id}
+                  <Fragment key={order._id}>
+                    <tr className="hover:bg-surface-700/30 transition-colors duration-150">
+                      <td className="px-4 sm:px-6 py-4">
+                        <button
+                          onClick={() => toggleRow(order._id)}
+                          className="text-surface-400 hover:text-white transition-colors"
+                        >
+                          <svg
+                            className={`w-5 h-5 transform transition-transform ${expandedRow === order._id ? 'rotate-90' : ''}`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
                           >
-                            {actionLoading === order._id ? '...' : 'Approve'}
-                          </Button>
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => handleReject(order._id)}
-                            disabled={actionLoading === order._id}
-                          >
-                            Reject
-                          </Button>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 text-sm text-white">
+                        {order.userId?.email || 'Unknown'}
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 text-sm text-surface-300">
+                        <div>
+                          {order.type === 'BUY_USDT' ? t('orders.type.buy_usdt') : order.type === 'SELL_USDT' ? t('orders.type.sell_usdt') : order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp')}
                         </div>
-                      )}
-                    </td>
-                  </tr>
+                        <div className="text-xs text-surface-500">{order.currency}</div>
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 text-sm font-medium text-white">
+                        {order.amount} {order.currency}
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 text-sm text-surface-400">
+                        {order.currency} {order.exchangeRate?.toFixed(2) || 'N/A'} / USDT
+                      </td>
+                      <td className="px-4 sm:px-6 py-4">
+                        {getStatusBadge(order.status)}
+                      </td>
+                      <td className="px-4 sm:px-6 py-4 text-sm text-surface-400">
+                        {formatDate(order.createdAt)}
+                      </td>
+                      <td className="px-4 sm:px-6 py-4">
+                        {order.status === 'pending' && (
+                          <div className="flex gap-2">
+                            <Button
+                              variant="success"
+                              size="sm"
+                              onClick={() => handleApprove(order._id)}
+                              disabled={actionLoading === order._id}
+                            >
+                              {actionLoading === order._id ? '...' : 'Approve'}
+                            </Button>
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              onClick={() => handleReject(order._id)}
+                              disabled={actionLoading === order._id}
+                            >
+                              Reject
+                            </Button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                    {expandedRow === order._id && (
+                      <tr>
+                        <td colSpan="8" className="px-4 sm:px-6 py-4 bg-surface-800/50">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {/* Payment Screenshot */}
+                            {order.paymentProof && (
+                              <div className="space-y-2">
+                                <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider">Payment Screenshot</h4>
+                                <div
+                                  className="cursor-pointer hover:opacity-80 transition-opacity"
+                                  onClick={() => setLightboxImage(order.paymentProof)}
+                                >
+                                  <img
+                                    src={order.paymentProof}
+                                    alt="Payment proof"
+                                    className="h-24 w-auto rounded border border-surface-600 object-cover"
+                                  />
+                                  <p className="text-xs text-surface-500 mt-1">Click to enlarge</p>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Wallet Address - Only for BUY_USDT */}
+                            {order.type === 'BUY_USDT' && (
+                              <div className="space-y-2">
+                                <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider">Wallet Address</h4>
+                                <div className="bg-surface-900 rounded p-2 border border-surface-700">
+                                  <code className="text-sm text-cyan-400 break-all">
+                                    {order.walletAddress || 'N/A'}
+                                  </code>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Network Info - Only for BUY_USDT */}
+                            {order.type === 'BUY_USDT' && (
+                              <div className="space-y-2">
+                                <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider">Network</h4>
+                                <div className="bg-surface-900 rounded p-2 border border-surface-700">
+                                  <span className="text-sm text-cyan-400">Plasma</span>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Telegram Contact */}
+                            <div className="space-y-2">
+                              <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider">Contact</h4>
+                              <Button
+                                variant="primary"
+                                size="sm"
+                                onClick={handleTelegramContact}
+                              >
+                                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-.896.563-2.594.936-.838.184-1.555.277-2.372.104-.041-.008-.135-.033-.269.053-.269.167-.432.461-.488.601-.064.167.004.25.138.334.134.083.585.249 1.375.523 1.52.529 2.655 1.005 2.717 1.029.062.025.121.038.162.016.177-.087 2.125-2.096 2.207-2.296.015-.037.032-.135.015-.201-.017-.065-.079-.138-.173-.194-.155-.093-.41-.061-.563-.036z"/>
+                                </svg>
+                                Contact on Telegram
+                              </Button>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
                 ))}
               </tbody>
             </table>
           </div>
         </Card>
+      )}
+
+      {/* Lightbox for payment screenshot */}
+      {lightboxImage && (
+        <div
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          onClick={() => setLightboxImage(null)}
+        >
+          <div className="relative max-w-4xl max-h-full">
+            <button
+              onClick={() => setLightboxImage(null)}
+              className="absolute -top-10 right-0 text-white hover:text-surface-300 transition-colors"
+            >
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <img
+              src={lightboxImage}
+              alt="Payment proof full size"
+              className="max-w-full max-h-[85vh] rounded-lg object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
