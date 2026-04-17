@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { getCurrencies, getCurrency, updateCurrency, seedCurrencies } = require('../controllers/currencyController');
-const { auth, admin } = require('../middleware/auth');
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 router.get('/', getCurrencies);
 router.get('/:code', getCurrency);
