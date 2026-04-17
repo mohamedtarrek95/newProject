@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { orderAPI, currencyAPI } from '@/lib/api';
 import { Button, Input, Select, Card, Spinner, Alert } from '@/components/ui';
 import { useTranslations } from '@/components/TranslationsProvider';
+import { useAuth } from '@/context/AuthProvider';
 
 const CURRENCY_SYMBOLS = {
   EGP: 'EGP',
@@ -18,16 +19,24 @@ export default function ExchangePage() {
   const [type, setType] = useState('SELL_USDT');
   const [amount, setAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [walletAddress, setWalletAddress] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
   const { t } = useTranslations();
+  const { user } = useAuth();
 
   useEffect(() => {
     loadCurrencies();
   }, []);
+
+  useEffect(() => {
+    if (user?.walletAddress) {
+      setWalletAddress(user.walletAddress);
+    }
+  }, [user]);
 
   const loadCurrencies = async () => {
     try {
@@ -76,11 +85,13 @@ export default function ExchangePage() {
     setSubmitting(true);
 
     try {
+      const isBuyOrder = type === 'BUY_USDT' || type === 'USDT_TO_EGP';
       const order = await orderAPI.create({
         type,
         currency,
         amount: parseFloat(amount),
-        paymentMethod
+        paymentMethod,
+        walletAddress: isBuyOrder ? walletAddress : null
       });
       setSuccess(t('exchange.orderCreated'));
       setTimeout(() => {
@@ -117,6 +128,8 @@ export default function ExchangePage() {
       </div>
     );
   }
+
+  const isBuyOrder = type === 'BUY_USDT' || type === 'USDT_TO_EGP';
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
@@ -175,6 +188,17 @@ export default function ExchangePage() {
               required
             />
 
+            {isBuyOrder && (
+              <Input
+                label="USDT Wallet Address"
+                type="text"
+                value={walletAddress}
+                onChange={(e) => setWalletAddress(e.target.value)}
+                placeholder="Enter your USDT wallet address"
+                required
+              />
+            )}
+
             {error && (
               <Alert variant="error">{error}</Alert>
             )}
@@ -186,7 +210,7 @@ export default function ExchangePage() {
             <Button
               type="submit"
               className="w-full"
-              disabled={submitting || !amount || !paymentMethod}
+              disabled={submitting || !amount || !paymentMethod || (isBuyOrder && !walletAddress)}
             >
               {submitting ? (
                 <span className="flex items-center gap-2 justify-center">
@@ -250,6 +274,20 @@ export default function ExchangePage() {
                 {calculatedAmount} {type === 'SELL_USDT' ? CURRENCY_SYMBOLS[currency] : 'USDT'}
               </span>
             </div>
+
+            {isBuyOrder && walletAddress && (
+              <div className="p-3 rounded-lg bg-surface-700/50 border border-surface-600">
+                <div className="flex items-start gap-2">
+                  <svg className="w-4 h-4 text-premium-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <div className="min-w-0">
+                    <p className="text-xs text-surface-400">Your USDT Wallet</p>
+                    <p className="text-sm font-mono text-white truncate">{walletAddress}</p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="mt-4 p-4 rounded-lg bg-surface-700/50 border border-surface-600">
               <div className="flex items-start gap-3">

@@ -2,12 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { userAPI } from '@/lib/api';
-import { Card, Spinner, Badge } from '@/components/ui';
+import { Card, Spinner, Badge, Button, Alert } from '@/components/ui';
 import { useTranslations } from '@/components/TranslationsProvider';
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(null);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
   const { t } = useTranslations();
 
   useEffect(() => {
@@ -18,10 +21,26 @@ export default function AdminUsersPage() {
     try {
       const data = await userAPI.getAll();
       setUsers(data);
-    } catch (error) {
-      console.error('Failed to load users:', error);
+    } catch (err) {
+      setError('Failed to load users');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRoleChange = async (userId, newRole) => {
+    setActionLoading(userId);
+    setMessage('');
+    setError('');
+
+    try {
+      await userAPI.updateRole(userId, { role: newRole });
+      setMessage(`User role updated to ${newRole}`);
+      loadUsers();
+    } catch (err) {
+      setError(err.message || 'Failed to update role');
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -45,8 +64,11 @@ export default function AdminUsersPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">{t('adminUsers.title')}</h1>
-        <p className="text-surface-400">Manage registered users</p>
+        <p className="text-surface-400">Manage registered users and roles</p>
       </div>
+
+      {message && <Alert variant="success" className="mb-6">{message}</Alert>}
+      {error && <Alert variant="error" className="mb-6">{error}</Alert>}
 
       {users.length === 0 ? (
         <Card className="text-center py-12">
@@ -66,8 +88,9 @@ export default function AdminUsersPage() {
                   <th className="text-left py-3 px-4 font-semibold text-surface-400 text-sm uppercase tracking-wider">Email</th>
                   <th className="text-left py-3 px-4 font-semibold text-surface-400 text-sm uppercase tracking-wider">Name</th>
                   <th className="text-left py-3 px-4 font-semibold text-surface-400 text-sm uppercase tracking-wider">Role</th>
-                  <th className="text-left py-3 px-4 font-semibold text-surface-400 text-sm uppercase tracking-wider">USDT Wallet</th>
+                  <th className="text-left py-3 px-4 font-semibold text-surface-400 text-sm uppercase tracking-wider">Wallet</th>
                   <th className="text-left py-3 px-4 font-semibold text-surface-400 text-sm uppercase tracking-wider">Joined</th>
+                  <th className="text-left py-3 px-4 font-semibold text-surface-400 text-sm uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-700">
@@ -79,19 +102,40 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="py-4 px-4">
                       <Badge variant={user.role === 'admin' ? 'approved' : 'default'}>
-                        {user.role === 'admin' ? t('adminUsers.admin') : t('adminUsers.user')}
+                        {user.role === 'admin' ? 'Admin' : 'User'}
                       </Badge>
                     </td>
                     <td className="py-4 px-4">
-                      {user.usdtWalletAddress ? (
+                      {user.walletAddress ? (
                         <span className="text-sm font-mono text-surface-300 truncate max-w-[150px] block">
-                          {user.usdtWalletAddress}
+                          {user.walletAddress}
                         </span>
                       ) : (
-                        <span className="text-surface-500 text-sm">{t('adminUsers.notSet')}</span>
+                        <span className="text-surface-500 text-sm">Not set</span>
                       )}
                     </td>
                     <td className="py-4 px-4 text-sm text-surface-400">{formatDate(user.createdAt)}</td>
+                    <td className="py-4 px-4">
+                      {user.role === 'user' ? (
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => handleRoleChange(user._id, 'admin')}
+                          disabled={actionLoading === user._id}
+                        >
+                          {actionLoading === user._id ? 'Promoting...' : 'Make Admin'}
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="danger"
+                          onClick={() => handleRoleChange(user._id, 'user')}
+                          disabled={actionLoading === user._id}
+                        >
+                          {actionLoading === user._id ? 'Demoting...' : 'Remove Admin'}
+                        </Button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

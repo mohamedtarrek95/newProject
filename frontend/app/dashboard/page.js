@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { currencyAPI, userAPI } from '@/lib/api';
 import { Card, Spinner, Alert, StatCard } from '@/components/ui';
 import { useTranslations } from '@/components/TranslationsProvider';
+import { useAuth } from '@/context/AuthProvider';
 
 const CURRENCY_SYMBOLS = {
   EGP: 'EGP',
@@ -18,10 +19,17 @@ export default function UserDashboard() {
   const [updating, setUpdating] = useState(false);
   const [message, setMessage] = useState('');
   const { t } = useTranslations();
+  const { user, updateUser } = useAuth();
 
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (user?.walletAddress) {
+      setWallet(user.walletAddress);
+    }
+  }, [user]);
 
   const loadData = async () => {
     try {
@@ -40,7 +48,8 @@ export default function UserDashboard() {
     setMessage('');
 
     try {
-      await userAPI.updateWallet({ usdtWalletAddress: wallet });
+      const updatedUser = await userAPI.updateWallet({ walletAddress: wallet });
+      updateUser({ walletAddress: wallet });
       setMessage(t('dashboard.walletUpdated'));
       setWallet('');
     } catch (error) {
@@ -64,7 +73,7 @@ export default function UserDashboard() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">{t('dashboard.title')}</h1>
-        <p className="text-surface-400">Manage your exchange orders and wallet</p>
+        <p className="text-surface-400">Your international exchange dashboard</p>
       </div>
 
       {/* Stats Grid */}

@@ -13,7 +13,6 @@ const orderSchema = new mongoose.Schema({
   },
   currency: {
     type: String,
-    enum: ['EGP', 'USD', 'EUR'],
     required: [true, 'Currency is required']
   },
   paymentMethod: {
@@ -33,6 +32,10 @@ const orderSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending'
+  },
+  walletAddress: {
+    type: String,
+    trim: true
   },
   paymentProofUrl: {
     type: String,

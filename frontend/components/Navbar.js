@@ -22,7 +22,7 @@ export default function Navbar() {
               </svg>
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-white to-surface-300 bg-clip-text text-transparent">
-              EGP-USDT
+              USDT Exchange
             </span>
           </Link>
 

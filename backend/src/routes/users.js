@@ -18,8 +18,12 @@ router.put('/profile', [
 ], validate, userController.updateProfile);
 
 router.put('/wallet', [
-  body('usdtWalletAddress').optional().trim()
+  body('walletAddress').optional().trim()
 ], validate, userController.updateWallet);
+
+router.put('/:id/role', admin, [
+  body('role').isIn(['user', 'admin']).withMessage('Role must be user or admin')
+], validate, userController.updateRole);
 
 router.delete('/:id', admin, userController.deleteUser);
 

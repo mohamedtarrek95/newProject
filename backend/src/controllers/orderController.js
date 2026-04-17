@@ -4,7 +4,7 @@ const { logTransaction } = require('../middleware/logger');
 
 exports.createOrder = async (req, res, next) => {
   try {
-    const { type, amount, currency, paymentMethod } = req.body;
+    const { type, amount, currency, paymentMethod, walletAddress } = req.body;
 
     const currencyData = await Currency.findOne({ code: currency.toUpperCase() });
     if (!currencyData) {
@@ -23,7 +23,8 @@ exports.createOrder = async (req, res, next) => {
       amount,
       currency: currency.toUpperCase(),
       paymentMethod,
-      exchangeRate
+      exchangeRate,
+      walletAddress: walletAddress || null
     });
 
     await logTransaction('CREATE_ORDER', req.user._id, order._id, {
@@ -31,7 +32,8 @@ exports.createOrder = async (req, res, next) => {
       amount,
       currency,
       paymentMethod,
-      exchangeRate
+      exchangeRate,
+      walletAddress
     }, req);
 
     res.status(201).json(order);

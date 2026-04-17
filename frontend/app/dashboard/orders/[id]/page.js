@@ -154,6 +154,7 @@ export default function OrderDetailPage() {
               { label: t('orderDetail.amount'), value: formatOrderAmount(order.type, order.currency) },
               { label: t('orderDetail.rate'), value: `${order.currency} ${order.exchangeRate.toFixed(2)} / USDT` },
               { label: t('orderDetail.youWill') + ' ' + (isBuyOrder(order.type) ? t('orderDetail.receive') : t('orderDetail.pay')), value: `${calculatedAmount} ${isBuyOrder(order.type) ? 'USDT' : order.currency}`, highlight: true },
+              ...(order.walletAddress ? [{ label: 'USDT Wallet', value: order.walletAddress }] : []),
               { label: t('orderDetail.created'), value: formatDate(order.createdAt) }
             ].map((item, idx) => (
               <div key={idx} className="flex flex-col sm:flex-row justify-between py-3 border-b border-surface-700 gap-2">

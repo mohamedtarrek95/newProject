@@ -16,8 +16,6 @@ const currencySchema = new mongoose.Schema({
   code: {
     type: String,
     required: [true, 'Currency code is required'],
-    enum: ['EGP', 'USD', 'EUR'],
-    unique: true,
     uppercase: true
   },
   name: {
@@ -35,8 +33,7 @@ const currencySchema = new mongoose.Schema({
     min: [0, 'Sell price cannot be negative']
   },
   paymentMethods: [{
-    type: String,
-    enum: ['Instapay', 'Payoneer', 'Revolut', 'Zelle', 'SEPA Instant']
+    type: String
   }],
   isActive: {
     type: Boolean,

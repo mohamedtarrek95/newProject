@@ -3,6 +3,8 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/a
 class ApiClient {
   constructor() {
     this.baseUrl = API_BASE_URL;
+    this.refreshInProgress = false;
+    this.refreshPromise = null;
   }
 
   getAccessToken() {
@@ -75,8 +77,14 @@ class ApiClient {
   }
 
   async refreshToken() {
+    if (this.refreshInProgress) {
+      return this.refreshPromise;
+    }
+
+    this.refreshInProgress = true;
+
     try {
-      const response = await fetch(`${this.baseUrl}/api/auth/refresh`, {
+      const response = await fetch(`${this.baseUrl}/auth/refresh`, {
         method: 'POST',
         credentials: 'include'
       });
@@ -88,6 +96,8 @@ class ApiClient {
       }
     } catch (error) {
       console.error('Refresh token failed:', error);
+    } finally {
+      this.refreshInProgress = false;
     }
     return false;
   }
@@ -133,40 +143,41 @@ const api = new ApiClient();
 export default api;
 
 export const authAPI = {
-  register: (data) => api.post('/api/auth/register', data),
-  login: (data) => api.post('/api/auth/login', data),
-  logout: () => api.post('/api/auth/logout'),
-  me: () => api.get('/api/auth/me')
+  register: (data) => api.post('/auth/register', data),
+  login: (data) => api.post('/auth/login', data),
+  logout: () => api.post('/auth/logout'),
+  me: () => api.get('/auth/me')
 };
 
 export const userAPI = {
-  getAll: () => api.get('/api/users'),
-  getById: (id) => api.get(`/api/users/${id}`),
-  updateProfile: (data) => api.put('/api/users/profile', data),
-  updateWallet: (data) => api.put('/api/users/wallet', data)
+  getAll: () => api.get('/users'),
+  getById: (id) => api.get(`/users/${id}`),
+  updateProfile: (data) => api.put('/users/profile', data),
+  updateWallet: (data) => api.put('/users/wallet', data),
+  updateRole: (id, data) => api.put(`/users/${id}/role`, data)
 };
 
 export const orderAPI = {
-  create: (data) => api.post('/api/orders', data),
-  getMyOrders: () => api.get('/api/orders'),
-  getById: (id) => api.get(`/api/orders/${id}`),
-  uploadProof: (id, file) => api.uploadFile(`/api/orders/${id}/proof`, file),
-  getAll: (params) => api.get('/api/orders/admin/all', { params }),
-  approve: (id, data) => api.put(`/api/orders/${id}/approve`, data),
-  reject: (id, data) => api.put(`/api/orders/${id}/reject`, data)
+  create: (data) => api.post('/orders', data),
+  getMyOrders: () => api.get('/orders'),
+  getById: (id) => api.get(`/orders/${id}`),
+  uploadProof: (id, file) => api.uploadFile(`/orders/${id}/proof`, file),
+  getAll: (params) => api.get('/orders/admin/all', { params }),
+  approve: (id, data) => api.put(`/orders/${id}/approve`, data),
+  reject: (id, data) => api.put(`/orders/${id}/reject`, data)
 };
 
 export const rateAPI = {
-  get: () => api.get('/api/rate'),
-  update: (data) => api.put('/api/rate', data)
+  get: () => api.get('/rate'),
+  update: (data) => api.put('/rate', data)
 };
 
 export const transactionAPI = {
-  getAll: (params) => api.get('/api/transactions', { params })
+  getAll: (params) => api.get('/transactions', { params })
 };
 
 export const currencyAPI = {
-  getAll: () => api.get('/api/currencies'),
-  get: (code) => api.get(`/api/currencies/${code}`),
-  update: (code, data) => api.put(`/api/currencies/${code}`, data)
+  getAll: () => api.get('/currencies'),
+  get: (code) => api.get(`/currencies/${code}`),
+  update: (code, data) => api.put(`/currencies/${code}`, data)
 };

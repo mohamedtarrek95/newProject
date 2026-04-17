@@ -42,15 +42,45 @@ exports.updateProfile = async (req, res, next) => {
 
 exports.updateWallet = async (req, res, next) => {
   try {
-    const { usdtWalletAddress } = req.body;
+    const { walletAddress } = req.body;
 
     const user = await User.findByIdAndUpdate(
       req.user._id,
-      { usdtWalletAddress },
+      { walletAddress },
       { new: true, runValidators: true }
     );
 
-    await logTransaction('UPDATE_WALLET', req.user._id, null, { usdtWalletAddress }, req);
+    await logTransaction('UPDATE_WALLET', req.user._id, null, { walletAddress }, req);
+
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updateRole = async (req, res, next) => {
+  try {
+    const { role } = req.body;
+
+    if (!['user', 'admin'].includes(role)) {
+      return res.status(400).json({ error: 'Invalid role. Must be user or admin' });
+    }
+
+    if (req.user._id.toString() === req.params.id) {
+      return res.status(400).json({ error: 'Cannot change your own role' });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { role },
+      { new: true, runValidators: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    await logTransaction('UPDATE_ROLE', req.user._id, req.params.id, { role }, req);
 
     res.json(user);
   } catch (error) {

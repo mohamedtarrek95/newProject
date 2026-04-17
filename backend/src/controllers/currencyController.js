@@ -25,20 +25,32 @@ exports.getCurrency = async (req, res, next) => {
 exports.updateCurrency = async (req, res, next) => {
   try {
     const { code } = req.params;
-    const { buyPrice, sellPrice, paymentMethods } = req.body;
+    const { name, buyPrice, sellPrice, paymentMethods } = req.body;
 
-    const currency = await Currency.findOne({ code: code.toUpperCase() });
+    let currency = await Currency.findOne({ code: code.toUpperCase() });
+
     if (!currency) {
-      return res.status(404).json({ message: 'Currency not found' });
+      if (!name || buyPrice === undefined || sellPrice === undefined) {
+        return res.status(400).json({ message: 'Name, buyPrice, and sellPrice are required for new currency' });
+      }
+      currency = new Currency({
+        code: code.toUpperCase(),
+        name,
+        buyPrice,
+        sellPrice,
+        paymentMethods: paymentMethods || [],
+        isActive: true
+      });
+    } else {
+      if (name !== undefined) currency.name = name;
+      if (buyPrice !== undefined) currency.buyPrice = buyPrice;
+      if (sellPrice !== undefined) currency.sellPrice = sellPrice;
+      if (paymentMethods !== undefined) currency.paymentMethods = paymentMethods;
     }
-
-    if (buyPrice !== undefined) currency.buyPrice = buyPrice;
-    if (sellPrice !== undefined) currency.sellPrice = sellPrice;
-    if (paymentMethods !== undefined) currency.paymentMethods = paymentMethods;
     currency.updatedBy = req.user._id;
 
     await currency.save();
-    await logTransaction('UPDATE_CURRENCY', req.user._id, null, { code, buyPrice, sellPrice, paymentMethods }, req);
+    await logTransaction('UPDATE_CURRENCY', req.user._id, null, { code, name, buyPrice, sellPrice, paymentMethods }, req);
 
     res.json(currency);
   } catch (error) {
