@@ -217,7 +217,7 @@ export default function AdminOrderDetailPage() {
             </div>
 
             {/* USDT Wallet Address for Buy Orders */}
-            {isBuyOrder(order.type) && order.userId?.walletAddress && (
+            {isBuyOrder(order.type) && order.walletAddress && (
               <div className="p-4 rounded-lg bg-primary-500/10 border border-primary-500/30">
                 <div className="flex items-center gap-2 mb-2">
                   <svg className="w-4 h-4 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -226,7 +226,7 @@ export default function AdminOrderDetailPage() {
                   <span className="text-sm font-medium text-primary-400">User Wallet Address (USDT Receive Address)</span>
                 </div>
                 <p className="text-white font-mono text-sm break-all bg-surface-900/50 p-2 rounded border border-surface-700">
-                  {order.userId.walletAddress}
+                  {order.walletAddress}
                 </p>
               </div>
             )}
@@ -320,6 +320,7 @@ export default function AdminOrderDetailPage() {
               )}
             </div>
           )}
+          </Card>
 
           {/* Payment Proof Section */}
           <Card>
