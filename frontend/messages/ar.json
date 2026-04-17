@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "تبادل EGP-USDT",
+    "appName": "تبادل USDT",
     "login": "تسجيل الدخول",
     "register": "التسجيل",
     "logout": "تسجيل الخروج",
@@ -25,7 +25,13 @@
     "apiStatus": "حالة API",
     "operational": "يعمل",
     "version": "الإصدار",
-    "note": "ملاحظة"
+    "note": "ملاحظة",
+    "buyPrice": "سعر الشراء",
+    "sellPrice": "سعر البيع",
+    "paymentMethod": "طريقة الدفع",
+    "paymentMethods": "طرق الدفع",
+    "currency": "العملة",
+    "currencies": "العملات"
   },
   "auth": {
     "loginTitle": "تسجيل الدخول إلى EGP-USDT Exchange",
@@ -73,9 +79,9 @@
   },
   "dashboard": {
     "title": "لوحة التحكم",
-    "exchangeRate": "سعر الصرف الحالي",
+    "exchangeRate": "سعر الصرف",
     "rateNotSet": "السعر غير محدد",
-    "egpToUsdt": "EGP إلى USDT",
+    "egpToUsdt": "إلى USDT",
     "quickActions": "إجراءات سريعة",
     "createNewOrder": "إنشاء طلب تبادل جديد",
     "viewMyOrders": "عرض طلباتي",
@@ -85,27 +91,34 @@
     "updating": "جاري التحديث...",
     "walletUpdated": "تم تحديث عنوان المحفظة بنجاح!",
     "walletUpdateFailed": "فشل تحديث المحفظة",
-    "walletPlaceholder": "أدخل عنوان محفظة USDT TRC-20 الخاصة بك"
+    "walletPlaceholder": "أدخل عنوان محفظة USDT TRC-20 الخاصة بك",
+    "selectCurrency": "اختر العملة",
+    "buyPrice": "سعر الشراء",
+    "sellPrice": "سعر البيع",
+    "per": "لكل USDT"
   },
   "exchange": {
     "title": "إنشاء طلب تبادل",
     "exchangeType": "نوع التبادل",
-    "egpToUsdtOption": "EGP إلى USDT (ترسل EGP وتتلقى USDT)",
-    "usdtToEgpOption": "USDT إلى EGP (ترسل USDT وتتلقى EGP)",
+    "egpToUsdtOption": "بيع USDT (ترسل USDT وتتلقى {currency})",
+    "usdtToEgpOption": "شراء USDT (ترسل {currency} وتتلقى USDT)",
     "amount": "المبلغ",
-    "amountInEgp": "المبلغ بالـ EGP",
-    "amountInUsdt": "المبلغ بالـ USDT",
+    "amountInEgp": "المبلغ بـ {currency}",
+    "amountInUsdt": "المبلغ بـ USDT",
     "createOrder": "إنشاء طلب",
     "creatingOrder": "جاري إنشاء الطلب...",
     "orderSummary": "ملخص الطلب",
-    "currentRate": "السعر الحالي",
+    "currentRate": "السعر",
     "youSend": "ترسل",
     "youReceive": "تستلم",
     "orderNote": "ملاحظة: بعد إنشاء الطلب، ستحتاج إلى إجراء الدفع ورفع دليل الدفع. سيراجع أحد المشرفين طلبك ويوافق عليه.",
     "rateNotAvailable": "سعر الصرف غير متاح",
     "rateNotAvailableDesc": "لم يقم المسؤول بتعيين سعر الصرف بعد. يرجى التحقق لاحقًا.",
     "orderCreated": "تم إنشاء الطلب بنجاح!",
-    "backToDashboard": "العودة إلى لوحة التحكم"
+    "backToDashboard": "العودة إلى لوحة التحكم",
+    "selectCurrency": "اختر العملة",
+    "selectPaymentMethod": "اختر طريقة الدفع",
+    "availablePaymentMethods": "طرق الدفع المتاحة"
   },
   "orders": {
     "title": "طلباتي",
@@ -119,6 +132,8 @@
       "rejected": "مرفوض"
     },
     "type": {
+      "buy_usdt": "شراء USDT",
+      "sell_usdt": "بيع USDT",
       "egp_to_usdt": "EGP → USDT",
       "usdt_to_egp": "USDT → EGP"
     }
@@ -194,13 +209,26 @@
     "currentRate": "السعر الحالي",
     "notSet": "غير محدد",
     "updateRate": "تحديث السعر",
-    "rateLabel": "سعر الصرف (EGP لكل USDT)",
+    "rateLabel": "سعر الصرف ({currency} لكل USDT)",
     "ratePlaceholder": "أدخل السعر (مثال: 50.00)",
     "updating": "جاري التحديث...",
     "rateUpdated": "تم تحديث سعر الصرف بنجاح!",
     "rateUpdateFailed": "فشل تحديث السعر",
     "rateNote": "ملاحظة: لن يؤثر تغيير السعر على الطلبات القائمة. ستستخدم الطلبات الجديدة فقط السعر المحدث.",
     "validRateError": "الرجاء إدخال رقم موجب صالح"
+  },
+  "adminCurrencies": {
+    "title": "إدارة العملات",
+    "description": "تكوين أسعار الشراء/البيع وطرق الدفع لكل عملة",
+    "currency": "العملة",
+    "buyPrice": "سعر الشراء",
+    "sellPrice": "سعر البيع",
+    "paymentMethods": "طرق الدفع",
+    "updated": "تم تحديث العملة بنجاح!",
+    "updateFailed": "فشل تحديث العملة",
+    "updating": "جاري التحديث...",
+    "save": "حفظ التغييرات",
+    "per": "لكل USDT"
   },
   "adminTransactions": {
     "title": "سجل المعاملات",

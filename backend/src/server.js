@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const orderRoutes = require('./routes/orders');
 const rateRoutes = require('./routes/rate');
+const currencyRoutes = require('./routes/currency');
 const transactionRoutes = require('./routes/transactions');
 
 const { errorHandler } = require('./middleware/errorHandler');
@@ -68,6 +69,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/rate', rateRoutes);
+app.use('/api/currencies', currencyRoutes);
 app.use('/api/transactions', transactionRoutes);
 
 // Root route for Railway health check

@@ -1,27 +1,37 @@
 const Order = require('../models/Order');
-const ExchangeRate = require('../models/ExchangeRate');
+const Currency = require('../models/Currency');
 const { logTransaction } = require('../middleware/logger');
 
 exports.createOrder = async (req, res, next) => {
   try {
-    const { type, amount } = req.body;
+    const { type, amount, currency, paymentMethod } = req.body;
 
-    const currentRate = await ExchangeRate.findOne().sort({ createdAt: -1 });
-    if (!currentRate) {
-      return res.status(400).json({ error: 'Exchange rate not set. Please try again later.' });
+    const currencyData = await Currency.findOne({ code: currency.toUpperCase() });
+    if (!currencyData) {
+      return res.status(400).json({ error: 'Currency not supported' });
     }
+
+    if (!currencyData.paymentMethods.includes(paymentMethod)) {
+      return res.status(400).json({ error: 'Invalid payment method for this currency' });
+    }
+
+    const exchangeRate = type === 'SELL_USDT' || type === 'EGP_TO_USDT' ? currencyData.sellPrice : currencyData.buyPrice;
 
     const order = await Order.create({
       userId: req.user._id,
       type,
       amount,
-      exchangeRate: currentRate.rate
+      currency: currency.toUpperCase(),
+      paymentMethod,
+      exchangeRate
     });
 
     await logTransaction('CREATE_ORDER', req.user._id, order._id, {
       type,
       amount,
-      exchangeRate: currentRate.rate
+      currency,
+      paymentMethod,
+      exchangeRate
     }, req);
 
     res.status(201).json(order);

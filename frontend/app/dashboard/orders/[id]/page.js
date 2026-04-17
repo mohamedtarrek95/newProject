@@ -107,7 +107,24 @@ export default function OrderDetailPage() {
     );
   }
 
-  const calculatedAmount = order.type === 'EGP_TO_USDT'
+  const getOrderTypeLabel = (type, currency) => {
+    const labels = {
+      'BUY_USDT': t('orders.type.buy_usdt'),
+      'SELL_USDT': t('orders.type.sell_usdt'),
+      'EGP_TO_USDT': t('orders.type.egp_to_usdt'),
+      'USDT_TO_EGP': t('orders.type.usdt_to_egp')
+    };
+    return labels[type] || type;
+  };
+
+  const isBuyOrder = (type) => type === 'BUY_USDT' || type === 'EGP_TO_USDT';
+
+  const formatOrderAmount = (type, currency) => {
+    const isBuy = isBuyOrder(type);
+    return `${order.amount} ${isBuy ? currency : 'USDT'}`;
+  };
+
+  const calculatedAmount = isBuyOrder(order.type)
     ? (order.amount / order.exchangeRate).toFixed(6)
     : (order.amount * order.exchangeRate).toFixed(2);
 
@@ -133,10 +150,10 @@ export default function OrderDetailPage() {
 
           <div className="space-y-4">
             {[
-              { label: t('orderDetail.exchangeType'), value: order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp') },
-              { label: t('orderDetail.amount'), value: `${order.amount} ${order.type === 'EGP_TO_USDT' ? 'EGP' : 'USDT'}` },
-              { label: t('orderDetail.rate'), value: `EGP ${order.exchangeRate.toFixed(2)} / USDT` },
-              { label: t('orderDetail.youWill') + ' ' + (order.type === 'EGP_TO_USDT' ? t('orderDetail.receive') : t('orderDetail.pay')), value: `${calculatedAmount} ${order.type === 'EGP_TO_USDT' ? 'USDT' : 'EGP'}`, highlight: true },
+              { label: t('orderDetail.exchangeType'), value: getOrderTypeLabel(order.type, order.currency) },
+              { label: t('orderDetail.amount'), value: formatOrderAmount(order.type, order.currency) },
+              { label: t('orderDetail.rate'), value: `${order.currency} ${order.exchangeRate.toFixed(2)} / USDT` },
+              { label: t('orderDetail.youWill') + ' ' + (isBuyOrder(order.type) ? t('orderDetail.receive') : t('orderDetail.pay')), value: `${calculatedAmount} ${isBuyOrder(order.type) ? 'USDT' : order.currency}`, highlight: true },
               { label: t('orderDetail.created'), value: formatDate(order.createdAt) }
             ].map((item, idx) => (
               <div key={idx} className="flex flex-col sm:flex-row justify-between py-3 border-b border-surface-700 gap-2">

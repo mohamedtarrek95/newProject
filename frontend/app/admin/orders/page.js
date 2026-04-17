@@ -157,13 +157,16 @@ export default function AdminOrdersPage() {
                       {order.userId?.email || 'Unknown'}
                     </td>
                     <td className="px-4 sm:px-6 py-4 text-sm text-surface-300">
-                      {order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp')}
+                      <div>
+                        {order.type === 'BUY_USDT' ? t('orders.type.buy_usdt') : order.type === 'SELL_USDT' ? t('orders.type.sell_usdt') : order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp')}
+                      </div>
+                      <div className="text-xs text-surface-500">{order.currency}</div>
                     </td>
                     <td className="px-4 sm:px-6 py-4 text-sm font-medium text-white">
-                      {order.amount} {order.type === 'EGP_TO_USDT' ? 'EGP' : 'USDT'}
+                      {order.amount} {order.currency}
                     </td>
                     <td className="px-4 sm:px-6 py-4 text-sm text-surface-400">
-                      EGP {order.exchangeRate?.toFixed(2) || 'N/A'} / USDT
+                      {order.currency} {order.exchangeRate?.toFixed(2) || 'N/A'} / USDT
                     </td>
                     <td className="px-4 sm:px-6 py-4">
                       {getStatusBadge(order.status)}

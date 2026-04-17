@@ -164,3 +164,9 @@ export const rateAPI = {
 export const transactionAPI = {
   getAll: (params) => api.get('/api/transactions', { params })
 };
+
+export const currencyAPI = {
+  getAll: () => api.get('/api/currencies'),
+  get: (code) => api.get(`/api/currencies/${code}`),
+  update: (code, data) => api.put(`/api/currencies/${code}`, data)
+};

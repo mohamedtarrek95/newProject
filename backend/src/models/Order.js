@@ -8,8 +8,17 @@ const orderSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['EGP_TO_USDT', 'USDT_TO_EGP'],
+    enum: ['BUY_USDT', 'SELL_USDT', 'EGP_TO_USDT', 'USDT_TO_EGP'],
     required: [true, 'Order type is required']
+  },
+  currency: {
+    type: String,
+    enum: ['EGP', 'USD', 'EUR'],
+    required: [true, 'Currency is required']
+  },
+  paymentMethod: {
+    type: String,
+    required: [true, 'Payment method is required']
   },
   amount: {
     type: Number,

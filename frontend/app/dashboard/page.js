@@ -1,12 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { rateAPI, userAPI } from '@/lib/api';
+import { currencyAPI, userAPI } from '@/lib/api';
 import { Card, Spinner, Alert, StatCard } from '@/components/ui';
 import { useTranslations } from '@/components/TranslationsProvider';
 
+const CURRENCY_SYMBOLS = {
+  EGP: 'EGP',
+  USD: '$',
+  EUR: '€'
+};
+
 export default function UserDashboard() {
-  const [rate, setRate] = useState(null);
+  const [currencies, setCurrencies] = useState([]);
   const [wallet, setWallet] = useState('');
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
@@ -19,8 +25,8 @@ export default function UserDashboard() {
 
   const loadData = async () => {
     try {
-      const rateData = await rateAPI.get();
-      setRate(rateData.rate);
+      const currencyData = await currencyAPI.getAll();
+      setCurrencies(currencyData);
     } catch (error) {
       console.error('Failed to load data:', error);
     } finally {
@@ -62,22 +68,32 @@ export default function UserDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Exchange Rate Card */}
-        <Card premium className="relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-premium-500/10 rounded-full blur-[60px]" />
-          <div className="relative">
-            <p className="text-surface-400 text-sm font-medium mb-2">{t('dashboard.exchangeRate')}</p>
-            <div className="text-4xl sm:text-5xl font-bold mb-2">
-              <span className="text-white">EGP </span>
-              <span className="text-gradient">{rate ? rate.toFixed(2) : '--'}</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {currencies.map((curr) => (
+          <Card key={curr.code} premium className="relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-premium-500/10 rounded-full blur-[60px]" />
+            <div className="relative">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-surface-400 text-sm font-medium">{curr.name}</p>
+                <span className="text-2xl font-bold text-white">{curr.code}</span>
+              </div>
+              <div className="space-y-1 mb-2">
+                <div className="flex justify-between">
+                  <span className="text-surface-400 text-sm">{t('dashboard.buyPrice')}</span>
+                  <span className="font-semibold text-emerald-400">{CURRENCY_SYMBOLS[curr.code]} {curr.buyPrice.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-surface-400 text-sm">{t('dashboard.sellPrice')}</span>
+                  <span className="font-semibold text-red-400">{CURRENCY_SYMBOLS[curr.code]} {curr.sellPrice.toFixed(2)}</span>
+                </div>
+              </div>
+              <p className="text-surface-500 text-xs">{t('dashboard.per')} USDT</p>
             </div>
-            <p className="text-surface-500 text-sm">per USDT</p>
-          </div>
-        </Card>
+          </Card>
+        ))}
 
         {/* Quick Actions Card */}
-        <Card>
+        <Card className="flex flex-col justify-center">
           <h2 className="text-lg font-semibold text-white mb-4">{t('dashboard.quickActions')}</h2>
           <div className="space-y-3">
             <a href="/dashboard/exchange" className="block">

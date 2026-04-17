@@ -2,14 +2,22 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { orderAPI, rateAPI } from '@/lib/api';
+import { orderAPI, currencyAPI } from '@/lib/api';
 import { Button, Input, Select, Card, Spinner, Alert } from '@/components/ui';
 import { useTranslations } from '@/components/TranslationsProvider';
 
+const CURRENCY_SYMBOLS = {
+  EGP: 'EGP',
+  USD: '$',
+  EUR: '€'
+};
+
 export default function ExchangePage() {
-  const [type, setType] = useState('EGP_TO_USDT');
+  const [currency, setCurrency] = useState('EGP');
+  const [currencies, setCurrencies] = useState([]);
+  const [type, setType] = useState('SELL_USDT');
   const [amount, setAmount] = useState('');
-  const [rate, setRate] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -18,19 +26,43 @@ export default function ExchangePage() {
   const { t } = useTranslations();
 
   useEffect(() => {
-    loadRate();
+    loadCurrencies();
   }, []);
 
-  const loadRate = async () => {
+  const loadCurrencies = async () => {
     try {
-      const data = await rateAPI.get();
-      setRate(data.rate);
+      const data = await currencyAPI.getAll();
+      setCurrencies(data);
+      if (data.length > 0) {
+        setCurrency(data[0].code);
+      }
     } catch (err) {
       setError(t('exchange.rateNotAvailable'));
     } finally {
       setLoading(false);
     }
   };
+
+  const selectedCurrency = currencies.find(c => c.code === currency);
+
+  const currentBuyPrice = selectedCurrency?.buyPrice || 0;
+  const currentSellPrice = selectedCurrency?.sellPrice || 0;
+
+  const handleCurrencyChange = (newCurrency) => {
+    setCurrency(newCurrency);
+    setPaymentMethod('');
+  };
+
+  const handleTypeChange = (newType) => {
+    setType(newType);
+    setPaymentMethod('');
+  };
+
+  const calculatedAmount = amount && currentBuyPrice && currentSellPrice
+    ? type === 'SELL_USDT'
+      ? (parseFloat(amount) * currentBuyPrice).toFixed(2)
+      : (parseFloat(amount) / currentSellPrice).toFixed(6)
+    : '0';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +71,12 @@ export default function ExchangePage() {
     setSubmitting(true);
 
     try {
-      const order = await orderAPI.create({ type, amount: parseFloat(amount) });
+      const order = await orderAPI.create({
+        type,
+        currency,
+        amount: parseFloat(amount),
+        paymentMethod
+      });
       setSuccess(t('exchange.orderCreated'));
       setTimeout(() => {
         router.push(`/dashboard/orders/${order._id}`);
@@ -51,12 +88,6 @@ export default function ExchangePage() {
     }
   };
 
-  const calculatedAmount = rate && amount
-    ? type === 'EGP_TO_USDT'
-      ? (parseFloat(amount) / rate).toFixed(6)
-      : (parseFloat(amount) * rate).toFixed(2)
-    : '0';
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -65,7 +96,7 @@ export default function ExchangePage() {
     );
   }
 
-  if (!rate) {
+  if (currencies.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <Card className="text-center py-12">
@@ -94,16 +125,42 @@ export default function ExchangePage() {
         <Card>
           <form onSubmit={handleSubmit} className="space-y-6">
             <Select
+              label={t('exchange.selectCurrency')}
+              value={currency}
+              onChange={(e) => handleCurrencyChange(e.target.value)}
+            >
+              {currencies.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.code} - {c.name}
+                </option>
+              ))}
+            </Select>
+
+            <Select
               label={t('exchange.exchangeType')}
               value={type}
-              onChange={(e) => setType(e.target.value)}
+              onChange={(e) => handleTypeChange(e.target.value)}
             >
-              <option value="EGP_TO_USDT">{t('exchange.egpToUsdtOption')}</option>
-              <option value="USDT_TO_EGP">{t('exchange.usdtToEgpOption')}</option>
+              <option value="SELL_USDT">{t('exchange.egpToUsdtOption', { currency: CURRENCY_SYMBOLS[currency] })}</option>
+              <option value="BUY_USDT">{t('exchange.usdtToEgpOption', { currency: CURRENCY_SYMBOLS[currency] })}</option>
+            </Select>
+
+            <Select
+              label={t('exchange.selectPaymentMethod')}
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              required
+            >
+              <option value="">--</option>
+              {selectedCurrency?.paymentMethods.map((method) => (
+                <option key={method} value={method}>
+                  {method}
+                </option>
+              ))}
             </Select>
 
             <Input
-              label={type === 'EGP_TO_USDT' ? t('exchange.amountInEgp') : t('exchange.amountInUsdt')}
+              label={type === 'SELL_USDT' ? t('exchange.amountInUsdt') : t('exchange.amountInEgp', { currency: CURRENCY_SYMBOLS[currency] })}
               type="number"
               step="0.01"
               min="0.01"
@@ -124,7 +181,7 @@ export default function ExchangePage() {
             <Button
               type="submit"
               className="w-full"
-              disabled={submitting || !amount}
+              disabled={submitting || !amount || !paymentMethod}
             >
               {submitting ? (
                 <span className="flex items-center gap-2 justify-center">
@@ -144,21 +201,31 @@ export default function ExchangePage() {
 
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 border-b border-surface-700 gap-2">
-              <span className="text-surface-400 text-sm">Current Rate</span>
-              <span className="font-semibold text-white">EGP {rate.toFixed(2)} / USDT</span>
+              <span className="text-surface-400 text-sm">{t('dashboard.selectCurrency')}</span>
+              <span className="font-semibold text-white">{currency} ({selectedCurrency?.name})</span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 border-b border-surface-700 gap-2">
+              <span className="text-surface-400 text-sm">{t('dashboard.buyPrice')}</span>
+              <span className="font-semibold text-emerald-400">{CURRENCY_SYMBOLS[currency]} {currentBuyPrice.toFixed(2)} {t('dashboard.per')}</span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 border-b border-surface-700 gap-2">
+              <span className="text-surface-400 text-sm">{t('dashboard.sellPrice')}</span>
+              <span className="font-semibold text-red-400">{CURRENCY_SYMBOLS[currency]} {currentSellPrice.toFixed(2)} {t('dashboard.per')}</span>
             </div>
 
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 border-b border-surface-700 gap-2">
               <span className="text-surface-400 text-sm">{t('exchange.youSend')}</span>
               <span className="font-semibold text-white">
-                {amount || '0'} {type === 'EGP_TO_USDT' ? 'EGP' : 'USDT'}
+                {amount || '0'} {type === 'SELL_USDT' ? 'USDT' : CURRENCY_SYMBOLS[currency]}
               </span>
             </div>
 
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 border-b border-surface-700 gap-2">
               <span className="text-surface-400 text-sm">{t('exchange.youReceive')}</span>
               <span className="font-bold text-2xl text-gradient">
-                {calculatedAmount} {type === 'EGP_TO_USDT' ? 'USDT' : 'EGP'}
+                {calculatedAmount} {type === 'SELL_USDT' ? CURRENCY_SYMBOLS[currency] : 'USDT'}
               </span>
             </div>
 

@@ -9,8 +9,10 @@ const upload = require('../config/upload');
 const router = express.Router();
 
 router.post('/', auth, [
-  body('type').isIn(['EGP_TO_USDT', 'USDT_TO_EGP']).withMessage('Invalid order type'),
-  body('amount').isFloat({ min: 0.01 }).withMessage('Amount must be greater than 0')
+  body('type').isIn(['BUY_USDT', 'SELL_USDT', 'EGP_TO_USDT', 'USDT_TO_EGP']).withMessage('Invalid order type'),
+  body('amount').isFloat({ min: 0.01 }).withMessage('Amount must be greater than 0'),
+  body('currency').isIn(['EGP', 'USD', 'EUR']).withMessage('Invalid currency'),
+  body('paymentMethod').notEmpty().withMessage('Payment method is required')
 ], validate, orderController.createOrder);
 
 router.get('/', auth, orderController.getMyOrders);

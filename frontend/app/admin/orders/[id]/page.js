@@ -110,7 +110,19 @@ export default function AdminOrderDetailPage() {
     );
   }
 
-  const calculatedAmount = order.type === 'EGP_TO_USDT'
+  const getOrderTypeLabel = (type) => {
+    const labels = {
+      'BUY_USDT': t('orders.type.buy_usdt'),
+      'SELL_USDT': t('orders.type.sell_usdt'),
+      'EGP_TO_USDT': t('orders.type.egp_to_usdt'),
+      'USDT_TO_EGP': t('orders.type.usdt_to_egp')
+    };
+    return labels[type] || type;
+  };
+
+  const isBuyOrder = (type) => type === 'BUY_USDT' || type === 'EGP_TO_USDT';
+
+  const calculatedAmount = isBuyOrder(order.type)
     ? (order.amount / order.exchangeRate).toFixed(6)
     : (order.amount * order.exchangeRate).toFixed(2);
 
@@ -145,10 +157,10 @@ export default function AdminOrderDetailPage() {
           <div className="space-y-4">
             {[
               { label: t('orderDetail.user'), value: order.userId?.email, sub: `${order.userId?.firstName} ${order.userId?.lastName}` },
-              { label: t('orderDetail.exchangeType'), value: order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp') },
-              { label: t('orderDetail.amount'), value: `${order.amount} ${order.type === 'EGP_TO_USDT' ? 'EGP' : 'USDT'}` },
-              { label: t('orderDetail.rate'), value: `EGP ${order.exchangeRate.toFixed(2)} / USDT` },
-              { label: t('orderDetail.convertedAmount'), value: `${calculatedAmount} ${order.type === 'EGP_TO_USDT' ? 'USDT' : 'EGP'}`, highlight: true },
+              { label: t('orderDetail.exchangeType'), value: getOrderTypeLabel(order.type), sub: order.currency },
+              { label: t('orderDetail.amount'), value: `${order.amount} ${order.currency}` },
+              { label: t('orderDetail.rate'), value: `${order.currency} ${order.exchangeRate.toFixed(2)} / USDT` },
+              { label: t('orderDetail.convertedAmount'), value: `${calculatedAmount} ${isBuyOrder(order.type) ? 'USDT' : order.currency}`, highlight: true },
               { label: t('orderDetail.created'), value: formatDate(order.createdAt) }
             ].map((item, idx) => (
               <div key={idx} className="flex flex-col sm:flex-row justify-between py-3 border-b border-surface-700 gap-2">

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "EGP-USDT Exchange",
+    "appName": "USDT Exchange",
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
@@ -25,7 +25,13 @@
     "apiStatus": "API Status",
     "operational": "Operational",
     "version": "Version",
-    "note": "Note"
+    "note": "Note",
+    "buyPrice": "Buy Price",
+    "sellPrice": "Sell Price",
+    "paymentMethod": "Payment Method",
+    "paymentMethods": "Payment Methods",
+    "currency": "Currency",
+    "currencies": "Currencies"
   },
   "auth": {
     "loginTitle": "Login to EGP-USDT Exchange",
@@ -73,9 +79,9 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "exchangeRate": "Current Exchange Rate",
+    "exchangeRate": "Exchange Rate",
     "rateNotSet": "Rate not set",
-    "egpToUsdt": "EGP to USDT",
+    "egpToUsdt": "to USDT",
     "quickActions": "Quick Actions",
     "createNewOrder": "Create New Exchange Order",
     "viewMyOrders": "View My Orders",
@@ -85,27 +91,34 @@
     "updating": "Updating...",
     "walletUpdated": "Wallet address updated successfully!",
     "walletUpdateFailed": "Failed to update wallet",
-    "walletPlaceholder": "Enter your TRC-20 USDT wallet address"
+    "walletPlaceholder": "Enter your TRC-20 USDT wallet address",
+    "selectCurrency": "Select Currency",
+    "buyPrice": "Buy Price",
+    "sellPrice": "Sell Price",
+    "per": "per USDT"
   },
   "exchange": {
     "title": "Create Exchange Order",
     "exchangeType": "Exchange Type",
-    "egpToUsdtOption": "EGP to USDT (You send EGP, receive USDT)",
-    "usdtToEgpOption": "USDT to EGP (You send USDT, receive EGP)",
+    "egpToUsdtOption": "Sell USDT (You send USDT, receive {currency})",
+    "usdtToEgpOption": "Buy USDT (You send {currency}, receive USDT)",
     "amount": "Amount",
-    "amountInEgp": "Amount in EGP",
+    "amountInEgp": "Amount in {currency}",
     "amountInUsdt": "Amount in USDT",
     "createOrder": "Create Order",
     "creatingOrder": "Creating Order...",
     "orderSummary": "Order Summary",
-    "currentRate": "Current Rate",
+    "currentRate": "Rate",
     "youSend": "You Send",
     "youReceive": "You Receive",
     "orderNote": "Note: After creating the order, you will need to make the payment and upload a proof of payment. An admin will review and approve your order.",
     "rateNotAvailable": "Exchange Rate Not Available",
     "rateNotAvailableDesc": "The admin has not set the exchange rate yet. Please check back later.",
     "orderCreated": "Order created successfully!",
-    "backToDashboard": "Back to Dashboard"
+    "backToDashboard": "Back to Dashboard",
+    "selectCurrency": "Select Currency",
+    "selectPaymentMethod": "Select Payment Method",
+    "availablePaymentMethods": "Available Payment Methods"
   },
   "orders": {
     "title": "My Orders",
@@ -119,6 +132,8 @@
       "rejected": "Rejected"
     },
     "type": {
+      "buy_usdt": "Buy USDT",
+      "sell_usdt": "Sell USDT",
       "egp_to_usdt": "EGP → USDT",
       "usdt_to_egp": "USDT → EGP"
     }
@@ -194,13 +209,26 @@
     "currentRate": "Current Rate",
     "notSet": "Not Set",
     "updateRate": "Update Rate",
-    "rateLabel": "Exchange Rate (EGP per USDT)",
+    "rateLabel": "Exchange Rate ({currency} per USDT)",
     "ratePlaceholder": "Enter rate (e.g., 50.00)",
     "updating": "Updating...",
     "rateUpdated": "Exchange rate updated successfully!",
     "rateUpdateFailed": "Failed to update rate",
     "rateNote": "Note: Changing the rate will not affect existing orders. Only new orders will use the updated rate.",
     "validRateError": "Please enter a valid positive number"
+  },
+  "adminCurrencies": {
+    "title": "Manage Currencies",
+    "description": "Configure buy/sell prices and payment methods for each currency",
+    "currency": "Currency",
+    "buyPrice": "Buy Price",
+    "sellPrice": "Sell Price",
+    "paymentMethods": "Payment Methods",
+    "updated": "Currency updated successfully!",
+    "updateFailed": "Failed to update currency",
+    "updating": "Updating...",
+    "save": "Save Changes",
+    "per": "per USDT"
   },
   "adminTransactions": {
     "title": "Transaction History",

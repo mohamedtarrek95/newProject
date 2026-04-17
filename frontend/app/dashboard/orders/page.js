@@ -93,16 +93,17 @@ export default function OrdersPage() {
                   <div className="flex-1 w-full">
                     <div className="flex flex-wrap items-center gap-3 mb-3">
                       <span className="font-semibold text-white text-sm sm:text-base">
-                        {order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp')}
+                        {order.type === 'BUY_USDT' ? t('orders.type.buy_usdt') : order.type === 'SELL_USDT' ? t('orders.type.sell_usdt') : order.type === 'EGP_TO_USDT' ? t('orders.type.egp_to_usdt') : t('orders.type.usdt_to_egp')}
                       </span>
                       {getStatusBadge(order.status)}
+                      <span className="text-xs text-surface-500 px-2 py-0.5 bg-surface-700 rounded">{order.currency}</span>
                     </div>
                     <p className="text-surface-300 text-sm sm:text-base mb-1">
                       {t('orderDetail.amount')}: <span className="font-semibold text-white">{order.amount}</span>
-                      {order.type === 'EGP_TO_USDT' ? ' EGP' : ' USDT'}
+                      {order.type === 'BUY_USDT' || order.type === 'EGP_TO_USDT' ? ` ${order.currency}` : ' USDT'}
                     </p>
                     <p className="text-xs sm:text-sm text-surface-500">
-                      Rate: EGP {order.exchangeRate.toFixed(2)} / USDT
+                      Rate: {order.currency} {order.exchangeRate.toFixed(2)} / USDT
                     </p>
                   </div>
                   <div className="text-left sm:text-right flex-shrink-0">
