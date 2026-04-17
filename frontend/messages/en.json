@@ -100,8 +100,10 @@
   "exchange": {
     "title": "Create Exchange Order",
     "exchangeType": "Exchange Type",
-    "egpToUsdtOption": "Sell USDT (You send USDT, receive {currency})",
-    "usdtToEgpOption": "Buy USDT (You send {currency}, receive USDT)",
+    "sellUsdtOption": "Sell USDT",
+    "buyUsdtOption": "Buy USDT",
+    "sellUsdt": "Sell USDT",
+    "buyUsdt": "Buy USDT",
     "amount": "Amount",
     "amountInEgp": "Amount in {currency}",
     "amountInUsdt": "Amount in USDT",
@@ -118,7 +120,9 @@
     "backToDashboard": "Back to Dashboard",
     "selectCurrency": "Select Currency",
     "selectPaymentMethod": "Select Payment Method",
-    "availablePaymentMethods": "Available Payment Methods"
+    "availablePaymentMethods": "Available Payment Methods",
+    "sellDescription": "You send USDT, receive {currency}",
+    "buyDescription": "You send {currency}, receive USDT"
   },
   "orders": {
     "title": "My Orders",

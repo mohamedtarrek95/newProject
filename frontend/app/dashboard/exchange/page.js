@@ -58,10 +58,15 @@ export default function ExchangePage() {
     setPaymentMethod('');
   };
 
+  const displayedPrice = type === 'SELL_USDT' ? currentSellPrice : currentBuyPrice;
+  const priceLabel = type === 'SELL_USDT'
+    ? t('dashboard.sellPrice')
+    : t('dashboard.buyPrice');
+
   const calculatedAmount = amount && currentBuyPrice && currentSellPrice
     ? type === 'SELL_USDT'
-      ? (parseFloat(amount) * currentBuyPrice).toFixed(2)
-      : (parseFloat(amount) / currentSellPrice).toFixed(6)
+      ? (parseFloat(amount) * displayedPrice).toFixed(2)
+      : (parseFloat(amount) / displayedPrice).toFixed(6)
     : '0';
 
   const handleSubmit = async (e) => {
@@ -141,8 +146,8 @@ export default function ExchangePage() {
               value={type}
               onChange={(e) => handleTypeChange(e.target.value)}
             >
-              <option value="SELL_USDT">{t('exchange.egpToUsdtOption', { currency: CURRENCY_SYMBOLS[currency] })}</option>
-              <option value="BUY_USDT">{t('exchange.usdtToEgpOption', { currency: CURRENCY_SYMBOLS[currency] })}</option>
+              <option value="SELL_USDT">{t('exchange.sellUsdtOption')}</option>
+              <option value="BUY_USDT">{t('exchange.buyUsdtOption')}</option>
             </Select>
 
             <Select
@@ -160,7 +165,7 @@ export default function ExchangePage() {
             </Select>
 
             <Input
-              label={type === 'SELL_USDT' ? t('exchange.amountInUsdt') : t('exchange.amountInEgp', { currency: CURRENCY_SYMBOLS[currency] })}
+              label={type === 'SELL_USDT' ? t('exchange.amountInUsdt') : `Amount in ${CURRENCY_SYMBOLS[currency]}`}
               type="number"
               step="0.01"
               min="0.01"
@@ -197,22 +202,39 @@ export default function ExchangePage() {
 
         {/* Summary Card */}
         <Card premium>
-          <h2 className="text-lg font-semibold text-white mb-6">{t('exchange.orderSummary')}</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-semibold text-white">{t('exchange.orderSummary')}</h2>
+            <div className="px-3 py-1.5 rounded-full bg-premium-500/20 border border-premium-500/30">
+              <span className="text-sm font-medium text-premium-400">{currency}</span>
+            </div>
+          </div>
 
-          <div className="space-y-4">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 border-b border-surface-700 gap-2">
-              <span className="text-surface-400 text-sm">{t('dashboard.selectCurrency')}</span>
-              <span className="font-semibold text-white">{currency} ({selectedCurrency?.name})</span>
+          <div className="space-y-3">
+            <div className="p-4 rounded-lg bg-surface-700/50 border border-surface-600">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-surface-400 text-sm">{t('exchange.exchangeType')}</span>
+                <span className={`font-semibold ${type === 'SELL_USDT' ? 'text-emerald-400' : 'text-blue-400'}`}>
+                  {type === 'SELL_USDT' ? t('exchange.sellUsdt') : t('exchange.buyUsdt')}
+                </span>
+              </div>
+              <div className="text-sm text-surface-500">
+                {type === 'SELL_USDT'
+                  ? `${CURRENCY_SYMBOLS[currency]} ${t('dashboard.sellPrice')}`
+                  : `${CURRENCY_SYMBOLS[currency]} ${t('dashboard.buyPrice')}`
+                }
+              </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 border-b border-surface-700 gap-2">
-              <span className="text-surface-400 text-sm">{t('dashboard.buyPrice')}</span>
-              <span className="font-semibold text-emerald-400">{CURRENCY_SYMBOLS[currency]} {currentBuyPrice.toFixed(2)} {t('dashboard.per')}</span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 border-b border-surface-700 gap-2">
-              <span className="text-surface-400 text-sm">{t('dashboard.sellPrice')}</span>
-              <span className="font-semibold text-red-400">{CURRENCY_SYMBOLS[currency]} {currentSellPrice.toFixed(2)} {t('dashboard.per')}</span>
+            <div className="p-4 rounded-lg bg-surface-700/50 border border-surface-600">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-surface-400 text-sm">{priceLabel}</span>
+                <span className="font-bold text-xl text-white">
+                  {CURRENCY_SYMBOLS[currency]} {displayedPrice.toFixed(4)}
+                </span>
+              </div>
+              <div className="text-xs text-surface-500">
+                1 USDT = {CURRENCY_SYMBOLS[currency]} {displayedPrice.toFixed(4)}
+              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 border-b border-surface-700 gap-2">
@@ -222,14 +244,14 @@ export default function ExchangePage() {
               </span>
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 border-b border-surface-700 gap-2">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 gap-2">
               <span className="text-surface-400 text-sm">{t('exchange.youReceive')}</span>
               <span className="font-bold text-2xl text-gradient">
                 {calculatedAmount} {type === 'SELL_USDT' ? CURRENCY_SYMBOLS[currency] : 'USDT'}
               </span>
             </div>
 
-            <div className="mt-6 p-4 rounded-lg bg-surface-700/50 border border-surface-600">
+            <div className="mt-4 p-4 rounded-lg bg-surface-700/50 border border-surface-600">
               <div className="flex items-start gap-3">
                 <svg className="w-5 h-5 text-premium-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

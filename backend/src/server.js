@@ -95,6 +95,24 @@ const connectWithRetry = async () => {
       socketTimeoutMS: 45000,
     });
     console.log('MongoDB connected successfully');
+
+    // Auto-seed currencies if none exist
+    const Currency = require('./models/Currency');
+    const count = await Currency.countDocuments();
+    if (count === 0) {
+      console.log('Seeding default currencies...');
+      const { seedCurrencies } = require('./controllers/currencyController');
+      // Call seed directly without req/res
+      const defaultCurrencies = [
+        { code: 'EGP', name: 'Egyptian Pound', buyPrice: 50, sellPrice: 48, paymentMethods: ['Instapay'] },
+        { code: 'USD', name: 'US Dollar', buyPrice: 1, sellPrice: 1, paymentMethods: ['Payoneer', 'Revolut', 'Zelle'] },
+        { code: 'EUR', name: 'Euro', buyPrice: 1.1, sellPrice: 1.08, paymentMethods: ['SEPA Instant', 'Revolut'] }
+      ];
+      for (const curr of defaultCurrencies) {
+        await Currency.findOneAndUpdate({ code: curr.code }, curr, { upsert: true, new: true });
+      }
+      console.log('Default currencies seeded successfully');
+    }
   } catch (error) {
     console.error('MongoDB connection failed (retrying in 5s):', error.message);
     setTimeout(connectWithRetry, 5000);

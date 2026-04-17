@@ -1099,6 +1099,9 @@ video {
 .border-yellow-500\/30 {
   border-color: rgb(234 179 8 / 0.3);
 }
+.border-premium-500\/30 {
+  border-color: rgb(245 158 11 / 0.3);
+}
 .border-t-premium-500 {
   --tw-border-opacity: 1;
   border-top-color: rgb(245 158 11 / var(--tw-border-opacity, 1));
@@ -1168,6 +1171,9 @@ video {
 }
 .bg-yellow-500\/20 {
   background-color: rgb(234 179 8 / 0.2);
+}
+.bg-premium-500\/20 {
+  background-color: rgb(245 158 11 / 0.2);
 }
 .bg-gradient-to-b {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
@@ -1358,6 +1364,9 @@ video {
 }
 .pt-6 {
   padding-top: 1.5rem;
+}
+.pt-4 {
+  padding-top: 1rem;
 }
 .text-left {
   text-align: left;
