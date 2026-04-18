@@ -61,9 +61,10 @@ export default function ExchangePage() {
   const loadUsdtSettings = async () => {
     try {
       const data = await settingsAPI.get();
+      console.log("Settings loaded:", data);
       setUsdtSettings(data);
     } catch (err) {
-      console.error('Failed to load USDT settings');
+      console.error('Failed to load USDT settings:', err.message);
     }
   };
 
@@ -318,7 +319,7 @@ export default function ExchangePage() {
               </div>
             )}
 
-            {type === 'SELL_USDT' && (usdtSettings.usdtWalletAddress || usdtSettings.usdtQrCodeUrl) && (
+            {type === 'SELL_USDT' && (
               <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
                 <div className="flex items-center gap-2 mb-3">
                   <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -326,7 +327,7 @@ export default function ExchangePage() {
                   </svg>
                   <h3 className="text-emerald-400 font-semibold text-sm">Send USDT to our wallet</h3>
                 </div>
-                {usdtSettings.usdtQrCodeUrl && (
+                {usdtSettings.usdtQrCodeUrl ? (
                   <div
                     className="mb-3 cursor-pointer group relative inline-block"
                     onClick={() => setLightboxImage(usdtSettings.usdtQrCodeUrl)}
@@ -342,8 +343,10 @@ export default function ExchangePage() {
                       </svg>
                     </div>
                   </div>
+                ) : (
+                  <div className="mb-3 text-sm text-emerald-300/70">QR code not configured yet</div>
                 )}
-                {usdtSettings.usdtWalletAddress && (
+                {usdtSettings.usdtWalletAddress ? (
                   <div className="flex items-center gap-2 bg-surface-900 rounded-lg p-3 border border-surface-700">
                     <p className="text-white font-mono text-sm flex-1 break-all">{usdtSettings.usdtWalletAddress}</p>
                     <button
@@ -356,15 +359,27 @@ export default function ExchangePage() {
                       </svg>
                     </button>
                   </div>
+                ) : (
+                  <div className="text-sm text-emerald-300/70 mb-3">Wallet address not configured yet</div>
                 )}
-                <p className="text-xs text-emerald-300 mt-2">
-                  Network: {usdtSettings.usdtNetwork || 'TRC20'}
-                </p>
-                <div className="mt-3 p-2 rounded bg-amber-500/10 border border-amber-500/30">
-                  <p className="text-xs text-amber-300">
-                    <strong>Warning:</strong> Send only USDT on {usdtSettings.usdtNetwork || 'TRC20'} network. Sending on another network may result in loss of funds.
-                  </p>
-                </div>
+                {usdtSettings.usdtWalletAddress || usdtSettings.usdtQrCodeUrl ? (
+                  <>
+                    <p className="text-xs text-emerald-300 mt-2">
+                      Network: {usdtSettings.usdtNetwork || 'TRC20'}
+                    </p>
+                    <div className="mt-3 p-2 rounded bg-amber-500/10 border border-amber-500/30">
+                      <p className="text-xs text-amber-300">
+                        <strong>Warning:</strong> Send only USDT on {usdtSettings.usdtNetwork || 'TRC20'} network. Sending on another network may result in loss of funds.
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <div className="mt-2 p-2 rounded bg-surface-800 border border-surface-700">
+                    <p className="text-sm text-surface-300">
+                      <strong>Admin:</strong> Please configure USDT wallet address and QR code in admin settings.
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 
