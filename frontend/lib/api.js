@@ -167,6 +167,21 @@ export const orderAPI = {
   reject: (id, data) => api.put(`/orders/${id}/reject`, data)
 };
 
+export const settingsAPI = {
+  get: () => api.get('/settings'),
+  update: (data) => api.put('/settings', data),
+  uploadQr: (file) => {
+    const formData = new FormData();
+    formData.append('qrCode', file);
+    const token = api.getAccessToken();
+    return fetch(`${api.baseUrl}/settings/qr-upload`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
+    }).then(res => res.json());
+  }
+};
+
 export const rateAPI = {
   get: () => api.get('/rate'),
   update: (data) => api.put('/rate', data)

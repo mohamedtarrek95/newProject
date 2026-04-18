@@ -13,7 +13,8 @@ router.post('/', auth, [
   body('amount').isFloat({ min: 0.01 }).withMessage('Amount must be greater than 0'),
   body('currency').isString().notEmpty().withMessage('Currency is required'),
   body('paymentMethod').notEmpty().withMessage('Payment method is required'),
-  body('walletAddress').optional().trim()
+  body('walletAddress').optional().trim(),
+  body('txid').optional().trim()
 ], validate, orderController.createOrder);
 
 router.get('/', auth, orderController.getMyOrders);

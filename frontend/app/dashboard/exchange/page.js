@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { orderAPI, currencyAPI } from '@/lib/api';
+import { orderAPI, currencyAPI, settingsAPI } from '@/lib/api';
 import { Button, Input, Select, Card, Spinner, Alert } from '@/components/ui';
 import { useTranslations } from '@/components/TranslationsProvider';
 import { useAuth } from '@/context/AuthProvider';
@@ -20,10 +20,13 @@ export default function ExchangePage() {
   const [amount, setAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
+  const [txid, setTxid] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [usdtSettings, setUsdtSettings] = useState({ usdtWalletAddress: '', usdtNetwork: 'TRC20', usdtQrCodeUrl: null });
+  const [lightboxImage, setLightboxImage] = useState(null);
   const router = useRouter();
   const { t } = useTranslations();
   const { user } = useAuth();
@@ -32,6 +35,7 @@ export default function ExchangePage() {
 
   useEffect(() => {
     loadCurrencies();
+    loadUsdtSettings();
   }, []);
 
   useEffect(() => {
@@ -51,6 +55,15 @@ export default function ExchangePage() {
       setError(t('exchange.rateNotAvailable'));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadUsdtSettings = async () => {
+    try {
+      const data = await settingsAPI.get();
+      setUsdtSettings(data);
+    } catch (err) {
+      console.error('Failed to load USDT settings');
     }
   };
 
@@ -87,13 +100,14 @@ export default function ExchangePage() {
     setSubmitting(true);
 
     try {
-      const isBuyOrder = type === 'BUY_USDT' || type === 'USDT_TO_EGP';
+      const isBuy = type === 'BUY_USDT' || type === 'USDT_TO_EGP';
       const order = await orderAPI.create({
         type,
         currency,
         amount: parseFloat(amount),
         paymentMethod,
-        walletAddress: isBuyOrder ? walletAddress : null
+        walletAddress: isBuy ? walletAddress : null,
+        txid: type === 'SELL_USDT' ? txid : null
       });
       setSuccess(t('exchange.orderCreated'));
       setTimeout(() => {
@@ -203,6 +217,17 @@ export default function ExchangePage() {
               />
             )}
 
+            {type === 'SELL_USDT' && (
+              <Input
+                label="Transaction ID (TXID)"
+                type="text"
+                value={txid}
+                onChange={(e) => setTxid(e.target.value)}
+                placeholder="Enter transaction ID after sending USDT"
+                required
+              />
+            )}
+
             {error && (
               <Alert variant="error">{error}</Alert>
             )}
@@ -214,7 +239,7 @@ export default function ExchangePage() {
             <Button
               type="submit"
               className="w-full"
-              disabled={submitting || !amount || !paymentMethod || (isBuyOrder && !walletAddress)}
+              disabled={submitting || !amount || !paymentMethod || (isBuyOrder && !walletAddress) || (type === 'SELL_USDT' && !txid)}
             >
               {submitting ? (
                 <span className="flex items-center gap-2 justify-center">
@@ -293,6 +318,56 @@ export default function ExchangePage() {
               </div>
             )}
 
+            {type === 'SELL_USDT' && (usdtSettings.usdtWalletAddress || usdtSettings.usdtQrCodeUrl) && (
+              <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
+                <div className="flex items-center gap-2 mb-3">
+                  <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <h3 className="text-emerald-400 font-semibold text-sm">Send USDT to our wallet</h3>
+                </div>
+                {usdtSettings.usdtQrCodeUrl && (
+                  <div
+                    className="mb-3 cursor-pointer group relative inline-block"
+                    onClick={() => setLightboxImage(usdtSettings.usdtQrCodeUrl)}
+                  >
+                    <img
+                      src={usdtSettings.usdtQrCodeUrl}
+                      alt="USDT QR Code"
+                      className="h-32 w-auto rounded border border-emerald-500/30 group-hover:border-emerald-400 transition-colors"
+                    />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                      </svg>
+                    </div>
+                  </div>
+                )}
+                {usdtSettings.usdtWalletAddress && (
+                  <div className="flex items-center gap-2 bg-surface-900 rounded-lg p-3 border border-surface-700">
+                    <p className="text-white font-mono text-sm flex-1 break-all">{usdtSettings.usdtWalletAddress}</p>
+                    <button
+                      onClick={() => navigator.clipboard.writeText(usdtSettings.usdtWalletAddress)}
+                      className="text-emerald-400 hover:text-emerald-300 transition-colors p-1"
+                      title="Copy address"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
+                <p className="text-xs text-emerald-300 mt-2">
+                  Network: {usdtSettings.usdtNetwork || 'TRC20'}
+                </p>
+                <div className="mt-3 p-2 rounded bg-amber-500/10 border border-amber-500/30">
+                  <p className="text-xs text-amber-300">
+                    <strong>Warning:</strong> Send only USDT on {usdtSettings.usdtNetwork || 'TRC20'} network. Sending on another network may result in loss of funds.
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="mt-4 p-4 rounded-lg bg-surface-700/50 border border-surface-600">
               <div className="flex items-start gap-3">
                 <svg className="w-5 h-5 text-premium-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -330,5 +405,29 @@ export default function ExchangePage() {
         </Card>
       </div>
     </div>
+
+    {lightboxImage && (
+      <div
+        className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+        onClick={() => setLightboxImage(null)}
+      >
+        <div className="relative max-w-2xl max-h-full">
+          <button
+            onClick={() => setLightboxImage(null)}
+            className="absolute -top-10 right-0 text-white hover:text-surface-300 transition-colors"
+          >
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <img
+            src={lightboxImage}
+            alt="QR Code full size"
+            className="max-w-full max-h-[85vh] rounded-lg object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      </div>
+    )}
   );
 }

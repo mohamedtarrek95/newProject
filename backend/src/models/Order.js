@@ -37,6 +37,11 @@ const orderSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  txid: {
+    type: String,
+    trim: true,
+    default: null
+  },
   paymentProofUrl: {
     type: String,
     default: null
