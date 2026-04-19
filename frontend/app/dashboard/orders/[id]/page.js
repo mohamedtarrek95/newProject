@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { orderAPI } from '@/lib/api';
-import { Button, Card, Badge, Spinner, Alert } from '@/components/ui';
+import { Button, Card, Badge, Spinner, Alert, Input } from '@/components/ui';
 import { useTranslations } from '@/components/TranslationsProvider';
 
 export default function OrderDetailPage() {
@@ -13,6 +13,10 @@ export default function OrderDetailPage() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [txid, setTxid] = useState('');
+  const [submittingTxid, setSubmittingTxid] = useState(false);
+  const [txidError, setTxidError] = useState('');
+  const [txidSuccess, setTxidSuccess] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [imageModal, setImageModal] = useState(false);
@@ -65,6 +69,28 @@ export default function OrderDetailPage() {
       setError(err.message || t('orderDetail.proofUploadFailed'));
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleSubmitTxid = async () => {
+    if (!txid.trim()) {
+      setTxidError('TXID is required');
+      return;
+    }
+
+    setSubmittingTxid(true);
+    setTxidError('');
+    setTxidSuccess('');
+
+    try {
+      await orderAPI.updateTxid(order._id, txid);
+      setTxidSuccess('TXID submitted successfully');
+      setTxid('');
+      loadOrder();
+    } catch (err) {
+      setTxidError(err.message || 'Failed to submit TXID');
+    } finally {
+      setSubmittingTxid(false);
     }
   };
 
@@ -151,6 +177,99 @@ export default function OrderDetailPage() {
         </svg>
         {t('orderDetail.backToOrders')}
       </Button>
+
+      {/* Telegram Contact Message */}
+      <div className="mb-6 p-4 rounded-lg bg-blue-500/10 border border-blue-500/30">
+        <div className="flex items-start gap-3">
+          <svg className="w-6 h-6 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          <div className="flex-1">
+            <p className="text-blue-300 font-medium mb-2">
+              Your order has been created successfully. Please contact us on Telegram to complete your request.
+            </p>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => window.open('https://t.me/Hosssam95', '_blank')}
+              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-200 shadow-lg shadow-blue-500/20"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-.896.563-2.594.936-.838.184-1.555.277-2.372.104-.041-.008-.135-.033-.269.053-.269.167-.432.461-.488.601-.064.167.004.25.138.334.134.083.585.249 1.375.523 1.52.529 2.655 1.005 2.717 1.029.062.025.121.038.162.016.177-.087 2.125-2.096 2.207-2.296.015-.037.032-.135.015-.201-.017-.065-.079-.138-.173-.194-.155-.093-.41-.061-.563-.036z"/>
+              </svg>
+              Contact us on Telegram
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* TXID Input Section for SELL_USDT orders */}
+      {order.type === 'SELL_USDT' && order.status === 'pending' && (
+        <div className="mb-6 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
+          <div className="flex items-start gap-3">
+            <svg className="w-6 h-6 text-emerald-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <div className="flex-1">
+              <h3 className="text-emerald-400 font-semibold mb-2">Submit Transaction ID (TXID)</h3>
+              <p className="text-emerald-300/80 text-sm mb-4">
+                After sending USDT to our wallet, please submit the transaction ID (TXID) to help us verify your payment.
+              </p>
+
+              {txidError && <Alert variant="error" className="mb-4">{txidError}</Alert>}
+              {txidSuccess && <Alert variant="success" className="mb-4">{txidSuccess}</Alert>}
+
+              <div className="flex gap-3">
+                <Input
+                  type="text"
+                  value={txid}
+                  onChange={(e) => setTxid(e.target.value)}
+                  placeholder="Enter transaction ID (TXID)"
+                  className="flex-1"
+                />
+                <Button
+                  onClick={handleSubmitTxid}
+                  disabled={submittingTxid || !txid.trim()}
+                  className="bg-emerald-500 hover:bg-emerald-600 text-white"
+                >
+                  {submittingTxid ? (
+                    <span className="flex items-center gap-2">
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Submitting...
+                    </span>
+                  ) : (
+                    'Submit TXID'
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Display TXID if already submitted */}
+      {order.type === 'SELL_USDT' && order.txid && (
+        <div className="mb-6 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
+          <div className="flex items-center gap-2 mb-2">
+            <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 className="text-emerald-400 font-semibold">Transaction ID (TXID) Submitted</h3>
+          </div>
+          <div className="flex items-center gap-2 bg-surface-900 rounded-lg p-3 border border-surface-700">
+            <p className="text-white font-mono text-sm flex-1 break-all">{order.txid}</p>
+            <button
+              onClick={() => navigator.clipboard.writeText(order.txid)}
+              className="text-emerald-400 hover:text-emerald-300 transition-colors p-1"
+              title="Copy TXID"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         {/* Order Details Card */}

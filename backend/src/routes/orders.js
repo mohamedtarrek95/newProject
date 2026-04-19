@@ -14,13 +14,18 @@ router.post('/', auth, [
   body('currency').isString().notEmpty().withMessage('Currency is required'),
   body('paymentMethod').notEmpty().withMessage('Payment method is required'),
   body('walletAddress').optional().trim(),
-  body('txid').optional().trim()
+  body('txid').optional().trim(),
+  body('telegramUsername').optional().trim()
 ], validate, orderController.createOrder);
 
 router.get('/', auth, orderController.getMyOrders);
 router.get('/admin/all', auth, admin, orderController.getAllOrders);
 
 router.get('/:id', auth, orderController.getOrderById);
+
+router.put('/:id/txid', auth, [
+  body('txid').notEmpty().withMessage('TXID is required')
+], validate, orderController.updateTxid);
 
 router.post('/:id/proof', auth, upload.single('proof'), orderController.uploadProof);
 

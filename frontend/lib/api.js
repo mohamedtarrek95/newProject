@@ -164,7 +164,8 @@ export const orderAPI = {
   uploadProof: (id, file) => api.uploadFile(`/orders/${id}/proof`, file),
   getAll: (params) => api.get('/orders/admin/all', { params }),
   approve: (id, data) => api.put(`/orders/${id}/approve`, data),
-  reject: (id, data) => api.put(`/orders/${id}/reject`, data)
+  reject: (id, data) => api.put(`/orders/${id}/reject`, data),
+  updateTxid: (id, txid) => api.put(`/orders/${id}/txid`, { txid })
 };
 
 export const settingsAPI = {

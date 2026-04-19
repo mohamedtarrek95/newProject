@@ -20,7 +20,7 @@ export default function ExchangePage() {
   const [amount, setAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
-  const [txid, setTxid] = useState('');
+  const [telegramUsername, setTelegramUsername] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -108,7 +108,7 @@ export default function ExchangePage() {
         amount: parseFloat(amount),
         paymentMethod,
         walletAddress: isBuy ? walletAddress : null,
-        txid: type === 'SELL_USDT' ? txid : null
+        telegramUsername: telegramUsername || null
       });
       setSuccess(t('exchange.orderCreated'));
       setTimeout(() => {
@@ -218,16 +218,13 @@ export default function ExchangePage() {
               />
             )}
 
-            {type === 'SELL_USDT' && (
-              <Input
-                label="Transaction ID (TXID)"
-                type="text"
-                value={txid}
-                onChange={(e) => setTxid(e.target.value)}
-                placeholder="Enter transaction ID after sending USDT"
-                required
-              />
-            )}
+            <Input
+              label="Your Telegram username (optional)"
+              type="text"
+              value={telegramUsername}
+              onChange={(e) => setTelegramUsername(e.target.value)}
+              placeholder="@username"
+            />
 
             {error && (
               <Alert variant="error">{error}</Alert>
@@ -240,7 +237,7 @@ export default function ExchangePage() {
             <Button
               type="submit"
               className="w-full"
-              disabled={submitting || !amount || !paymentMethod || (isBuyOrder && !walletAddress) || (type === 'SELL_USDT' && !txid)}
+              disabled={submitting || !amount || !paymentMethod || (isBuyOrder && !walletAddress)}
             >
               {submitting ? (
                 <span className="flex items-center gap-2 justify-center">

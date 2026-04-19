@@ -42,6 +42,11 @@ const orderSchema = new mongoose.Schema({
     trim: true,
     default: null
   },
+  telegramUsername: {
+    type: String,
+    trim: true,
+    default: null
+  },
   paymentProofUrl: {
     type: String,
     default: null

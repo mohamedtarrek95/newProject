@@ -4,7 +4,7 @@ const { logTransaction } = require('../middleware/logger');
 
 exports.createOrder = async (req, res, next) => {
   try {
-    const { type, amount, currency, paymentMethod, walletAddress, txid } = req.body;
+    const { type, amount, currency, paymentMethod, walletAddress, txid, telegramUsername } = req.body;
 
     const currencyData = await Currency.findOne({ code: currency.toUpperCase() });
     if (!currencyData) {
@@ -25,7 +25,8 @@ exports.createOrder = async (req, res, next) => {
       paymentMethod,
       exchangeRate,
       walletAddress: walletAddress || null,
-      txid: (type === 'SELL_USDT' && txid) ? txid : null
+      txid: null,
+      telegramUsername: telegramUsername || null
     });
 
     await logTransaction('CREATE_ORDER', req.user._id, order._id, {
@@ -63,6 +64,44 @@ exports.getOrderById = async (req, res, next) => {
     if (order.userId._id.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Access denied' });
     }
+
+    res.json(order);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updateTxid = async (req, res, next) => {
+  try {
+    const { txid } = req.body;
+
+    if (!txid || typeof txid !== 'string' || txid.trim() === '') {
+      return res.status(400).json({ error: 'TXID is required' });
+    }
+
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    if (order.userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    if (order.type !== 'SELL_USDT') {
+      return res.status(400).json({ error: 'TXID can only be submitted for SELL_USDT orders' });
+    }
+
+    if (order.status !== 'pending') {
+      return res.status(400).json({ error: 'Can only submit TXID for pending orders' });
+    }
+
+    order.txid = txid.trim();
+    await order.save();
+
+    await logTransaction('UPDATE_TXID', req.user._id, order._id, {
+      txid: order.txid
+    }, req);
 
     res.json(order);
   } catch (error) {
