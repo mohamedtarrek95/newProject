@@ -46,14 +46,14 @@ export default function LoginPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
             </div>
-            <span className="text-2xl font-bold text-white">USDT-Worldwide</span>
+            <span className="text-2xl font-bold text-white">{t('common.appName')}</span>
           </Link>
         </div>
 
         <Card premium>
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-white mb-2">{t('auth.loginTitle')}</h1>
-            <p className="text-surface-400 text-sm">Welcome back! Please enter your details.</p>
+            <p className="text-surface-400 text-sm">{t('auth.welcomeBack')}</p>
           </div>
 
           {error && (
@@ -68,7 +68,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="your@email.com"
+              placeholder={t('auth.yourEmail')}
               required
             />
 
@@ -77,7 +77,7 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              placeholder={t('auth.enterYourPassword')}
               required
             />
 

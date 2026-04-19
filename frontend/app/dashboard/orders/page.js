@@ -60,7 +60,7 @@ export default function OrdersPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">{t('orders.title')}</h1>
-          <p className="text-surface-400">View and manage your exchange orders</p>
+          <p className="text-surface-400">{t('orders.subtitle')}</p>
         </div>
         <Link href="/dashboard/exchange">
           <button className="btn-primary text-sm sm:text-base whitespace-nowrap">
@@ -103,7 +103,7 @@ export default function OrdersPage() {
                       {order.type === 'BUY_USDT' || order.type === 'EGP_TO_USDT' ? ` ${order.currency}` : ' USDT'}
                     </p>
                     <p className="text-xs sm:text-sm text-surface-500">
-                      Rate: {order.currency} {order.exchangeRate.toFixed(2)} / USDT
+                      {t('orders.rate', { currency: order.currency, rate: order.exchangeRate.toFixed(2) })}
                     </p>
                   </div>
                   <div className="text-left sm:text-right flex-shrink-0">

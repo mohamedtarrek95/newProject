@@ -21,6 +21,7 @@ export default function ExchangePage() {
   const [paymentMethod, setPaymentMethod] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
   const [telegramUsername, setTelegramUsername] = useState('');
+  const [paymentDetails, setPaymentDetails] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -108,7 +109,8 @@ export default function ExchangePage() {
         amount: parseFloat(amount),
         paymentMethod,
         walletAddress: isBuy ? walletAddress : null,
-        telegramUsername: telegramUsername || null
+        telegramUsername: telegramUsername || null,
+        paymentDetails: isBuy ? paymentDetails : null
       });
       setSuccess(t('exchange.orderCreated'));
       setTimeout(() => {
@@ -154,7 +156,7 @@ export default function ExchangePage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">{t('exchange.title')}</h1>
-        <p className="text-surface-400">Create a new exchange order</p>
+        <p className="text-surface-400">{t('exchange.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
@@ -197,33 +199,44 @@ export default function ExchangePage() {
             </Select>
 
             <Input
-              label={type === 'SELL_USDT' ? t('exchange.amountInUsdt') : `Amount in ${CURRENCY_SYMBOLS[currency]}`}
+              label={type === 'SELL_USDT' ? t('exchange.amountInUsdt') : t('exchange.amountInCurrency').replace('{symbol}', CURRENCY_SYMBOLS[currency] || currency)}
               type="number"
               step="0.01"
               min="0.01"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.00"
+              placeholder={t('exchange.amountPlaceholder')}
               required
             />
 
             {isBuyOrder && (
               <Input
-                label="USDT Wallet Address"
+                label={t('exchange.usdtWalletAddress')}
                 type="text"
                 value={walletAddress}
                 onChange={(e) => setWalletAddress(e.target.value)}
-                placeholder="Enter your USDT wallet address"
+                placeholder={t('exchange.enterUsdtWalletPlaceholder')}
+                required
+              />
+            )}
+
+            {isBuyOrder && (
+              <Input
+                label={t('exchange.paymentDetails')}
+                type="text"
+                value={paymentDetails}
+                onChange={(e) => setPaymentDetails(e.target.value)}
+                placeholder={t('exchange.paymentDetailsPlaceholder')}
                 required
               />
             )}
 
             <Input
-              label="Your Telegram username (optional)"
+              label={t('exchange.telegramUsername')}
               type="text"
               value={telegramUsername}
               onChange={(e) => setTelegramUsername(e.target.value)}
-              placeholder="@username"
+              placeholder={t('exchange.telegramUsernamePlaceholder')}
             />
 
             {error && (
@@ -237,7 +250,7 @@ export default function ExchangePage() {
             <Button
               type="submit"
               className="w-full"
-              disabled={submitting || !amount || !paymentMethod || (isBuyOrder && !walletAddress)}
+              disabled={submitting || !amount || !paymentMethod || (isBuyOrder && !walletAddress) || (isBuyOrder && !paymentDetails)}
             >
               {submitting ? (
                 <span className="flex items-center gap-2 justify-center">
@@ -309,7 +322,7 @@ export default function ExchangePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                   <div className="min-w-0">
-                    <p className="text-xs text-surface-400">Your USDT Wallet</p>
+                    <p className="text-xs text-surface-400">{t('exchange.yourUsdtWallet')}</p>
                     <p className="text-sm font-mono text-white truncate">{walletAddress}</p>
                   </div>
                 </div>
@@ -322,7 +335,7 @@ export default function ExchangePage() {
                   <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <h3 className="text-emerald-400 font-semibold text-sm">Send USDT to our wallet</h3>
+                  <h3 className="text-emerald-400 font-semibold text-sm">{t('exchange.sendUsdtToWallet')}</h3>
                 </div>
                 {usdtSettings.usdtQrCodeUrl ? (
                   <div
@@ -338,7 +351,7 @@ export default function ExchangePage() {
                         e.target.nextSibling?.nextSibling?.classList.remove('hidden');
                       }}
                     />
-                    <span className="hidden text-sm text-amber-300">Failed to load QR image</span>
+                      <span className="hidden text-sm text-amber-300">{t('exchange.failedToLoadQr')}</span>
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded">
                       <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
@@ -346,7 +359,7 @@ export default function ExchangePage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="mb-3 text-sm text-emerald-300/70">QR code not configured yet</div>
+                  <div className="mb-3 text-sm text-emerald-300/70">{t('exchange.qrNotConfigured')}</div>
                 )}
                 {usdtSettings.usdtWalletAddress ? (
                   <div className="flex items-center gap-2 bg-surface-900 rounded-lg p-3 border border-surface-700">
@@ -354,7 +367,7 @@ export default function ExchangePage() {
                     <button
                       onClick={() => navigator.clipboard.writeText(usdtSettings.usdtWalletAddress)}
                       className="text-emerald-400 hover:text-emerald-300 transition-colors p-1"
-                      title="Copy address"
+                      title={t('exchange.copyAddress')}
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -362,23 +375,23 @@ export default function ExchangePage() {
                     </button>
                   </div>
                 ) : (
-                  <div className="text-sm text-emerald-300/70 mb-3">Wallet address not configured yet</div>
+                  <div className="text-sm text-emerald-300/70 mb-3">{t('exchange.walletNotConfigured')}</div>
                 )}
                 {usdtSettings.usdtWalletAddress || usdtSettings.usdtQrCodeUrl ? (
                   <>
                     <p className="text-xs text-emerald-300 mt-2">
-                      Network: {usdtSettings.usdtNetwork || 'TRC20'}
+                      {t('exchange.networkLabel').replace('{network}', usdtSettings.usdtNetwork || 'TRC20')}
                     </p>
                     <div className="mt-3 p-2 rounded bg-amber-500/10 border border-amber-500/30">
                       <p className="text-xs text-amber-300">
-                        <strong>Warning:</strong> Send only USDT on {usdtSettings.usdtNetwork || 'TRC20'} network. Sending on another network may result in loss of funds.
+                        <strong>{t('common.note')}:</strong> {t('exchange.warningSendOnly').replace('{network}', usdtSettings.usdtNetwork || 'TRC20')}
                       </p>
                     </div>
                   </>
                 ) : (
                   <div className="mt-2 p-2 rounded bg-surface-800 border border-surface-700">
                     <p className="text-sm text-surface-300">
-                      <strong>Admin:</strong> Please configure USDT wallet address and QR code in admin settings.
+                      <strong>{t('common.note')}:</strong> {t('exchange.adminConfigureWallet')}
                     </p>
                   </div>
                 )}
@@ -402,7 +415,7 @@ export default function ExchangePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                 </svg>
                 <p className="text-sm text-cyan-300">
-                  <strong className="text-cyan-400">Network:</strong> This transaction uses TRC20 network
+                  <strong className="text-cyan-400">{t('exchange.network')}:</strong> {t('exchange.networkTrc20')}
                 </p>
               </div>
             </div>
@@ -416,7 +429,7 @@ export default function ExchangePage() {
               <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-.896.563-2.594.936-.838.184-1.555.277-2.372.104-.041-.008-.135-.033-.269.053-.269.167-.432.461-.488.601-.064.167.004.25.138.334.134.083.585.249 1.375.523 1.52.529 2.655 1.005 2.717 1.029.062.025.121.038.162.016.177-.087 2.125-2.096 2.207-2.296.015-.037.032-.135.015-.201-.017-.065-.079-.138-.173-.194-.155-.093-.41-.061-.563-.036z"/>
               </svg>
-              Contact Support on Telegram
+              t('exchange.telegramSupport')
             </Button>
           </div>
         </Card>

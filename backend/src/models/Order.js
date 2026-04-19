@@ -55,6 +55,11 @@ const orderSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  paymentDetails: {
+    type: String,
+    trim: true,
+    default: null
+  },
   processedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

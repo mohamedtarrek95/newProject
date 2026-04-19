@@ -52,10 +52,10 @@ export default function AdminRatePage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">{t('adminRate.title')}</h1>
-          <p className="text-surface-400">Overview of all currency rates and prices</p>
+          <p className="text-surface-400">{t('adminRate.subtitle')}</p>
         </div>
         <Button onClick={() => router.push('/admin/currencies')}>
-          Manage Currencies
+          {t('adminRate.manageCurrencies')}
         </Button>
       </div>
 
@@ -79,7 +79,7 @@ export default function AdminRatePage() {
                     {CURRENCY_SYMBOLS[currency.code]} {currency.buyPrice.toFixed(4)}
                   </span>
                 </div>
-                <p className="text-xs text-surface-500 mt-1">per USDT</p>
+                <p className="text-xs text-surface-500 mt-1">{t('adminRate.perUsdt')}</p>
               </div>
 
               <div className="p-4 rounded-lg bg-surface-700/50 border border-surface-600">
@@ -89,13 +89,15 @@ export default function AdminRatePage() {
                     {CURRENCY_SYMBOLS[currency.code]} {currency.sellPrice.toFixed(4)}
                   </span>
                 </div>
-                <p className="text-xs text-surface-500 mt-1">per USDT</p>
+                <p className="text-xs text-surface-500 mt-1">{t('adminRate.perUsdt')}</p>
               </div>
             </div>
 
             <div className="mt-4 pt-4 border-t border-surface-700">
               <p className="text-xs text-surface-500">
-                {currency.paymentMethods.length} payment method{currency.paymentMethods.length !== 1 ? 's' : ''}:
+                {currency.paymentMethods.length === 1
+                  ? t('adminRate.paymentMethodCount', { count: currency.paymentMethods.length })
+                  : t('adminRate.paymentMethodsCount', { count: currency.paymentMethods.length })}:
               </p>
               <div className="flex flex-wrap gap-1 mt-2">
                 {currency.paymentMethods.map((method) => (
@@ -122,7 +124,7 @@ export default function AdminRatePage() {
               <strong className="text-premium-400">{t('common.note')}:</strong>
             </p>
             <p className="text-sm text-surface-400 mt-1">
-              To update rates, click "Manage Currencies" above or navigate to the Currencies page in the admin panel.
+              {t('adminRate.toUpdateRatesNote')}
             </p>
           </div>
         </div>

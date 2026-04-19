@@ -167,7 +167,7 @@ export default function OrderDetailPage() {
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.099.154.232.17.325.015.093.034.302-.064.623z"/>
           </svg>
-          Contact us on Telegram
+          {t('orderDetail.contactUsOnTelegram')}
         </Button>
       </div>
 
@@ -186,7 +186,7 @@ export default function OrderDetailPage() {
           </svg>
           <div className="flex-1">
             <p className="text-blue-300 font-medium mb-2">
-              Your order has been created successfully. Please contact us on Telegram to complete your request.
+              {t('orderDetail.orderCreatedContact')}
             </p>
             <Button
               variant="primary"
@@ -197,7 +197,7 @@ export default function OrderDetailPage() {
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-.896.563-2.594.936-.838.184-1.555.277-2.372.104-.041-.008-.135-.033-.269.053-.269.167-.432.461-.488.601-.064.167.004.25.138.334.134.083.585.249 1.375.523 1.52.529 2.655 1.005 2.717 1.029.062.025.121.038.162.016.177-.087 2.125-2.096 2.207-2.296.015-.037.032-.135.015-.201-.017-.065-.079-.138-.173-.194-.155-.093-.41-.061-.563-.036z"/>
               </svg>
-              Contact us on Telegram
+              {t('orderDetail.contactUsOnTelegram')}
             </Button>
           </div>
         </div>
@@ -211,10 +211,8 @@ export default function OrderDetailPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <div className="flex-1">
-              <h3 className="text-emerald-400 font-semibold mb-2">Submit Transaction ID (TXID)</h3>
-              <p className="text-emerald-300/80 text-sm mb-4">
-                After sending USDT to our wallet, please submit the transaction ID (TXID) to help us verify your payment.
-              </p>
+              <h3 className="text-emerald-400 font-semibold mb-2">{t('orderDetail.submitTxid')}</h3>
+              <p className="text-emerald-300/80 text-sm mb-4">{t('orderDetail.txidDescription')}</p>
 
               {txidError && <Alert variant="error" className="mb-4">{txidError}</Alert>}
               {txidSuccess && <Alert variant="success" className="mb-4">{txidSuccess}</Alert>}
@@ -224,7 +222,7 @@ export default function OrderDetailPage() {
                   type="text"
                   value={txid}
                   onChange={(e) => setTxid(e.target.value)}
-                  placeholder="Enter transaction ID (TXID)"
+                  placeholder={t('orderDetail.enterTxid')}
                   className="flex-1"
                 />
                 <Button
@@ -235,10 +233,10 @@ export default function OrderDetailPage() {
                   {submittingTxid ? (
                     <span className="flex items-center gap-2">
                       <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Submitting...
+                      {t('orderDetail.submitting')}
                     </span>
                   ) : (
-                    'Submit TXID'
+                    t('orderDetail.submitTxidBtn')
                   )}
                 </Button>
               </div>
@@ -254,14 +252,14 @@ export default function OrderDetailPage() {
             <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <h3 className="text-emerald-400 font-semibold">Transaction ID (TXID) Submitted</h3>
+            <h3 className="text-emerald-400 font-semibold">{t('orderDetail.txidSubmittedBadge')}</h3>
           </div>
           <div className="flex items-center gap-2 bg-surface-900 rounded-lg p-3 border border-surface-700">
             <p className="text-white font-mono text-sm flex-1 break-all">{order.txid}</p>
             <button
               onClick={() => navigator.clipboard.writeText(order.txid)}
               className="text-emerald-400 hover:text-emerald-300 transition-colors p-1"
-              title="Copy TXID"
+              title={t('orderDetail.copyTxid')}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -287,7 +285,7 @@ export default function OrderDetailPage() {
 
           {/* User Info Section */}
           <div className="mb-6 p-4 rounded-lg bg-surface-900/50 border border-surface-700">
-            <h3 className="text-sm font-semibold text-surface-400 mb-3 uppercase tracking-wider">User Information</h3>
+            <h3 className="text-sm font-semibold text-surface-400 mb-3 uppercase tracking-wider">{t('orderDetail.userInfo')}</h3>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
                 {order.user?.name?.charAt(0)?.toUpperCase() || 'U'}
@@ -302,7 +300,7 @@ export default function OrderDetailPage() {
           <div className="space-y-4">
             {/* Order Type */}
             <div className="flex flex-col sm:flex-row justify-between py-3 border-b border-surface-700 gap-2">
-              <span className="text-surface-400 text-sm">Order Type</span>
+              <span className="text-surface-400 text-sm">{t('orderDetail.orderType')}</span>
               <span className="font-medium text-white bg-blue-500/20 px-3 py-1 rounded-full text-sm">
                 {getOrderTypeLabel(order.type, order.currency)}
               </span>
@@ -310,31 +308,31 @@ export default function OrderDetailPage() {
 
             {/* Currency */}
             <div className="flex flex-col sm:flex-row justify-between py-3 border-b border-surface-700 gap-2">
-              <span className="text-surface-400 text-sm">Currency</span>
+              <span className="text-surface-400 text-sm">{t('orderDetail.currency')}</span>
               <span className="font-medium text-white">{order.currency}</span>
             </div>
 
             {/* Amount */}
             <div className="flex flex-col sm:flex-row justify-between py-3 border-b border-surface-700 gap-2">
-              <span className="text-surface-400 text-sm">Amount</span>
+              <span className="text-surface-400 text-sm">{t('orderDetail.amount')}</span>
               <span className="font-bold text-xl text-white">{formatOrderAmount(order.type, order.currency)}</span>
             </div>
 
             {/* Payment Method */}
             <div className="flex flex-col sm:flex-row justify-between py-3 border-b border-surface-700 gap-2">
-              <span className="text-surface-400 text-sm">Payment Method</span>
-              <span className="font-medium text-white">Bank Transfer</span>
+              <span className="text-surface-400 text-sm">{t('orderDetail.paymentMethod')}</span>
+              <span className="font-medium text-white">{t('orderDetail.bankTransfer')}</span>
             </div>
 
             {/* Rate */}
             <div className="flex flex-col sm:flex-row justify-between py-3 border-b border-surface-700 gap-2">
-              <span className="text-surface-400 text-sm">Exchange Rate</span>
+              <span className="text-surface-400 text-sm">{t('orderDetail.rate')}</span>
               <span className="font-medium text-white">{order.currency} {order.exchangeRate.toFixed(2)} / USDT</span>
             </div>
 
             {/* You Will Receive/Pay */}
             <div className="flex flex-col sm:flex-row justify-between py-3 border-b border-surface-700 gap-2 bg-gradient-to-r from-surface-900/50 to-transparent px-2 -mx-2">
-              <span className="text-surface-400 text-sm">{isBuyOrder(order.type) ? 'You Will Receive' : 'You Will Pay'}</span>
+              <span className="text-surface-400 text-sm">{isBuyOrder(order.type) ? t('orderDetail.youWillReceive') : t('orderDetail.youWillPay')}</span>
               <span className="font-bold text-xl text-gradient">
                 {calculatedAmount} {isBuyOrder(order.type) ? 'USDT' : order.currency}
               </span>
@@ -348,7 +346,7 @@ export default function OrderDetailPage() {
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
-                  Plasma
+                  {t('orderDetail.plasma')}
                 </span>
               </div>
             )}
@@ -360,7 +358,7 @@ export default function OrderDetailPage() {
                   <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
-                  <span className="text-blue-400 font-semibold text-sm">USDT Wallet Address (Receive Address)</span>
+                  <span className="text-blue-400 font-semibold text-sm">{t('orderDetail.usdtWalletAddress')} ({t('orderDetail.receiveAddress')})</span>
                 </div>
                 <div className="flex items-center gap-2 bg-surface-900 rounded-lg p-3 border border-surface-700">
                   <p className="text-white font-mono text-sm flex-1 break-all">{order.walletAddress}</p>
@@ -377,9 +375,22 @@ export default function OrderDetailPage() {
               </div>
             )}
 
+            {/* Payment Details for BUY orders */}
+            {isBuyOrder(order.type) && order.paymentDetails && (
+              <div className="mt-4 p-4 rounded-lg bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg className="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span className="text-amber-400 font-semibold text-sm">{t('orderDetail.paymentDetails')}</span>
+                </div>
+                <p className="text-white text-sm whitespace-pre-wrap">{order.paymentDetails}</p>
+              </div>
+            )}
+
             {/* Order Status */}
             <div className="flex flex-col sm:flex-row justify-between py-3 gap-2">
-              <span className="text-surface-400 text-sm">Order Status</span>
+              <span className="text-surface-400 text-sm">{t('orderDetail.orderStatus')}</span>
               {getStatusBadge(order.status)}
             </div>
           </div>
@@ -429,7 +440,7 @@ export default function OrderDetailPage() {
                   </div>
                 </div>
               </button>
-              <p className="text-center text-surface-500 text-xs mt-2">Click image to enlarge</p>
+              <p className="text-center text-surface-500 text-xs mt-2">{t('orderDetail.clickImageToEnlarge')}</p>
             </div>
           ) : order.status === 'pending' ? (
             <div>
@@ -452,8 +463,8 @@ export default function OrderDetailPage() {
                     <svg className="w-8 h-8 text-surface-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <p className="text-sm text-surface-400">Click to upload payment proof</p>
-                    <p className="text-xs text-surface-500 mt-1">PNG, JPG up to 5MB</p>
+                    <p className="text-sm text-surface-400">{t('orderDetail.clickToUpload')}</p>
+                    <p className="text-xs text-surface-500 mt-1">{t('orderDetail.fileTypes')}</p>
                   </div>
                 </label>
 
@@ -520,7 +531,7 @@ export default function OrderDetailPage() {
               onClick={() => setImageModal(false)}
               className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors flex items-center gap-2"
             >
-              <span className="text-sm">Close</span>
+              <span className="text-sm">{t('orderDetail.close')}</span>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>

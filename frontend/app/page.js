@@ -65,18 +65,11 @@ export default function HomePage() {
           <div className="text-center mb-16 sm:mb-20">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-800 border border-surface-700 mb-6">
               <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-              <span className="text-sm text-surface-300">Secure & Reliable Exchange</span>
+              <span className="text-sm text-surface-300">{t('landing.secureReliableExchange')}</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
-              <span className="text-white">Exchange </span>
-              <span className="bg-gradient-to-r from-premium-400 via-premium-500 to-premium-600 bg-clip-text text-transparent">
-                Currency
-              </span>
-              <span className="text-white"> to </span>
-              <span className="bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 bg-clip-text text-transparent">
-                USDT
-              </span>
+              <span className="text-white">{t('landing.heroTitle')}</span>
             </h1>
 
             <p className="text-lg sm:text-xl md:text-2xl text-surface-400 mb-8 max-w-2xl mx-auto px-4">

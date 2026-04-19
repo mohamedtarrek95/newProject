@@ -5,10 +5,12 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthProvider';
 import { Button } from '@/components/ui';
 import LanguageSwitcher from './LanguageSwitcher';
+import { useTranslations } from '@/components/TranslationsProvider';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useTranslations();
 
   return (
     <nav className="bg-surface-800/80 backdrop-blur-xl border-b border-surface-700 sticky top-0 z-50">
@@ -34,28 +36,28 @@ export default function Navbar() {
               <>
                 {user.role === 'admin' && (
                   <Link href="/admin" className="text-surface-300 hover:text-premium-400 font-medium transition-colors duration-200">
-                    Admin
+                    {t('nav.admin')}
                   </Link>
                 )}
                 <Link href="/dashboard" className="text-surface-300 hover:text-white font-medium transition-colors duration-200">
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Link>
                 <div className="flex items-center gap-3 pl-4 border-l border-surface-700">
                   <span className="text-surface-400 text-sm max-w-[150px] truncate">
                     {user.email}
                   </span>
                   <Button variant="secondary" size="sm" onClick={logout}>
-                    Logout
+                    {t('nav.logout')}
                   </Button>
                 </div>
               </>
             ) : (
               <>
                 <Link href="/auth/login">
-                  <Button variant="outline" size="sm">Login</Button>
+                  <Button variant="outline" size="sm">{t('nav.login')}</Button>
                 </Link>
                 <Link href="/auth/register">
-                  <Button variant="primary" size="sm">Register</Button>
+                  <Button variant="primary" size="sm">{t('nav.register')}</Button>
                 </Link>
               </>
             )}
@@ -97,7 +99,7 @@ export default function Navbar() {
                     className="block px-3 py-2.5 rounded-lg text-surface-300 hover:bg-surface-700 hover:text-white font-medium transition-all duration-200"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Admin
+                    {t('nav.admin')}
                   </Link>
                 )}
                 <Link
@@ -105,19 +107,19 @@ export default function Navbar() {
                   className="block px-3 py-2.5 rounded-lg text-surface-300 hover:bg-surface-700 hover:text-white font-medium transition-all duration-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Link>
                 <Button variant="secondary" className="w-full" onClick={() => { logout(); setIsMenuOpen(false); }}>
-                  Logout
+                  {t('nav.logout')}
                 </Button>
               </>
             ) : (
               <>
                 <Link href="/auth/login" className="block" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="outline" className="w-full">Login</Button>
+                  <Button variant="outline" className="w-full">{t('nav.login')}</Button>
                 </Link>
                 <Link href="/auth/register" className="block" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="primary" className="w-full">Register</Button>
+                  <Button variant="primary" className="w-full">{t('nav.register')}</Button>
                 </Link>
               </>
             )}

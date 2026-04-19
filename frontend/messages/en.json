@@ -31,7 +31,9 @@
     "paymentMethod": "Payment Method",
     "paymentMethods": "Payment Methods",
     "currency": "Currency",
-    "currencies": "Currencies"
+    "currencies": "Currencies",
+    "unknown": "Unknown",
+    "approving": "..."
   },
   "auth": {
     "loginTitle": "Login to USDT-Worldwide",
@@ -48,12 +50,25 @@
     "passwordsDoNotMatch": "Passwords do not match",
     "passwordMinLength": "Password must be at least 6 characters",
     "loggingIn": "Logging in...",
-    "creatingAccount": "Creating account..."
+    "creatingAccount": "Creating account...",
+    "welcomeBack": "Welcome back! Please enter your details.",
+    "createYourAccount": "Create your account to get started.",
+    "min6Chars": "Min. 6 characters",
+    "confirmYourPassword": "Confirm your password",
+    "yourEmail": "your@email.com",
+    "enterYourPassword": "Enter your password",
+    "firstNamePlaceholder": "First Name",
+    "lastNamePlaceholder": "Last Name"
   },
   "nav": {
     "goToDashboard": "Go to Dashboard",
     "adminPanel": "Admin Panel",
-    "newOrder": "New Order"
+    "newOrder": "New Order",
+    "dashboard": "Dashboard",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register",
+    "admin": "Admin"
   },
   "landing": {
     "heroTitle": "Currency to USDT Exchange",
@@ -75,7 +90,8 @@
     "step3Desc": "Submit payment proof",
     "step4Title": "Get Approved",
     "step4Desc": "Admin approves and you receive funds",
-    "copyright": "2024 USDT-Worldwide. All rights reserved."
+    "copyright": "2024 USDT-Worldwide. All rights reserved.",
+    "secureReliableExchange": "Secure & Reliable Exchange"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -95,10 +111,13 @@
     "selectCurrency": "Select Currency",
     "buyPrice": "Buy Price",
     "sellPrice": "Sell Price",
-    "per": "per USDT"
+    "per": "per USDT",
+    "yourInternationalExchange": "Your international exchange dashboard",
+    "subtitle": "Your international exchange dashboard"
   },
   "exchange": {
     "title": "Create Exchange Order",
+    "subtitle": "Create a new exchange order",
     "exchangeType": "Exchange Type",
     "sellUsdtOption": "Sell USDT",
     "buyUsdtOption": "Buy USDT",
@@ -107,6 +126,7 @@
     "amount": "Amount",
     "amountInEgp": "Amount in {currency}",
     "amountInUsdt": "Amount in USDT",
+    "amountInCurrency": "Amount in {symbol}",
     "createOrder": "Create Order",
     "creatingOrder": "Creating Order...",
     "orderSummary": "Order Summary",
@@ -122,7 +142,28 @@
     "selectPaymentMethod": "Select Payment Method",
     "availablePaymentMethods": "Available Payment Methods",
     "sellDescription": "You send USDT, receive {currency}",
-    "buyDescription": "You send {currency}, receive USDT"
+    "buyDescription": "You send {currency}, receive USDT",
+    "usdtWalletAddress": "USDT Wallet Address",
+    "enterUsdtWalletPlaceholder": "Enter your USDT wallet address",
+    "telegramUsername": "Your Telegram username (optional)",
+    "telegramUsernamePlaceholder": "@username",
+    "paymentDetails": "Payment Details",
+    "paymentDetailsPlaceholder": "Enter wallet, bank info, or notes for payment",
+    "contactSupport": "Contact Support on Telegram",
+    "sendUsdtToWallet": "Send USDT to our wallet",
+    "qrNotConfigured": "QR code not configured yet",
+    "walletNotConfigured": "Wallet address not configured yet",
+    "network": "Network",
+    "networkLabel": "Network: {network}",
+    "warningSendOnly": "Warning: Send only USDT on {network} network. Sending on another network may result in loss of funds.",
+    "adminConfigureWallet": "Admin: Please configure USDT wallet address and QR code in admin settings.",
+    "networkTrc20": "This transaction uses TRC20 network",
+    "networkTrc20Label": "Network: This transaction uses TRC20 network",
+    "copyAddress": "Copy address",
+    "yourUsdtWallet": "Your USDT Wallet",
+    "failedToLoadQr": "Failed to load QR image",
+    "amountPlaceholder": "0.00",
+    "telegramSupport": "Contact Support on Telegram"
   },
   "orders": {
     "title": "My Orders",
@@ -130,6 +171,8 @@
     "noOrders": "You haven't created any orders yet.",
     "createFirstOrder": "Create Your First Order",
     "viewDetails": "View Details",
+    "subtitle": "View and manage your exchange orders",
+    "rate": "{currency} {rate} / USDT",
     "status": {
       "pending": "Pending",
       "approved": "Approved",
@@ -146,6 +189,7 @@
     "orderDetails": "Order Details",
     "orderStatus": "Order Status",
     "exchangeType": "Exchange Type",
+    "orderType": "Order Type",
     "amount": "Amount",
     "rate": "Exchange Rate",
     "youWill": "You Will",
@@ -181,7 +225,35 @@
     "backToOrders": "Back to Orders",
     "statusApproved": "approved",
     "statusRejected": "rejected",
-    "statusPending": "pending"
+    "statusPending": "pending",
+    "userInfo": "User Information",
+    "currency": "Currency",
+    "paymentMethod": "Payment Method",
+    "bankTransfer": "Bank Transfer",
+    "youWillReceive": "You Will Receive",
+    "youWillPay": "You Will Pay",
+    "network": "Network",
+    "plasma": "Plasma",
+    "usdtWalletAddress": "USDT Wallet Address",
+    "receiveAddress": "Receive Address",
+    "contactUsOnTelegram": "Contact us on Telegram",
+    "orderCreatedContact": "Your order has been created successfully. Please contact us on Telegram to complete your request.",
+    "submitTxid": "Submit Transaction ID (TXID)",
+    "txidDescription": "After sending USDT to our wallet, please submit the transaction ID (TXID) to help us verify your payment.",
+    "enterTxid": "Enter transaction ID (TXID)",
+    "submitting": "Submitting...",
+    "submitTxidBtn": "Submit TXID",
+    "txidRequired": "TXID is required",
+    "txidSubmitted": "TXID submitted successfully",
+    "txidFailed": "Failed to submit TXID",
+    "txidSubmittedBadge": "Transaction ID (TXID) Submitted",
+    "copyTxid": "Copy TXID",
+    "clickToEnlarge": "Click to enlarge",
+    "clickToUpload": "Click to upload payment proof",
+    "fileTypes": "PNG, JPG up to 5MB",
+    "clickImageToEnlarge": "Click image to enlarge",
+    "close": "Close",
+    "paymentDetails": "Payment Details"
   },
   "adminOrders": {
     "title": "Manage Orders",
@@ -195,7 +267,19 @@
     "date": "Date",
     "approve": "Approve",
     "reject": "Reject",
-    "ordersCount": "{count} orders"
+    "ordersCount": "{count} orders",
+    "total": "Total",
+    "orderDetailsTitle": "Order Details",
+    "paymentProof": "Payment Proof",
+    "walletAddress": "Wallet Address (USDT Transfer Destination)",
+    "txid": "Transaction ID (TXID)",
+    "paymentDetails": "Payment Details",
+    "telegramUsername": "Telegram Username",
+    "clickToEnlarge": "Click to enlarge",
+    "subtitle": "Review and manage exchange orders",
+    "totalOrders": "Total: {count} orders",
+    "approving": "...",
+    "unknown": "Unknown"
   },
   "adminUsers": {
     "title": "Manage Users",
@@ -206,7 +290,15 @@
     "joined": "Joined",
     "notSet": "Not set",
     "admin": "Admin",
-    "user": "User"
+    "user": "User",
+    "promoting": "Promoting...",
+    "demoting": "Demoting...",
+    "makeAdmin": "Make Admin",
+    "removeAdmin": "Remove Admin",
+    "subtitle": "Manage registered users and roles",
+    "loadFailed": "Failed to load users",
+    "roleUpdateFailed": "Failed to update role",
+    "roleUpdatedTo": "User role updated to {role}"
   },
   "adminRate": {
     "title": "Set Exchange Rate",
@@ -219,7 +311,23 @@
     "rateUpdated": "Exchange rate updated successfully!",
     "rateUpdateFailed": "Failed to update rate",
     "rateNote": "Note: Changing the rate will not affect existing orders. Only new orders will use the updated rate.",
-    "validRateError": "Please enter a valid positive number"
+    "validRateError": "Please enter a valid positive number",
+    "manageCurrencies": "Manage Currencies",
+    "paymentMethodsCount": "{count} payment methods",
+    "subtitle": "Overview of all currency rates and prices",
+    "perUsdt": "per USDT",
+    "paymentMethodCount": "{count} payment method",
+    "paymentMethodsCount": "{count} payment methods",
+    "toUpdateRatesNote": "To update rates, click \"Manage Currencies\" above or navigate to the Currencies page in the admin panel.",
+    "paymentMethod": "{count} payment method",
+    "paymentMethods": "{count} payment methods",
+    "currencyNames": {
+      "EGP": "Egyptian Pound",
+      "USD": "US Dollar",
+      "EUR": "Euro",
+      "GBP": "British Pound",
+      "AED": "UAE Dirham"
+    }
   },
   "adminCurrencies": {
     "title": "Manage Currencies",
@@ -228,11 +336,47 @@
     "buyPrice": "Buy Price",
     "sellPrice": "Sell Price",
     "paymentMethods": "Payment Methods",
-    "updated": "Currency updated successfully!",
+    "updated": "Currency added/updated successfully!",
     "updateFailed": "Failed to update currency",
     "updating": "Updating...",
     "save": "Save Changes",
-    "per": "per USDT"
+    "per": "per USDT",
+    "addCurrency": "Add Currency",
+    "addNewCurrency": "Add New Currency",
+    "currencyCode": "Currency Code (e.g., GBP, AED)",
+    "currencyName": "Currency Name",
+    "buyPriceLabel": "Buy Price (per USDT)",
+    "sellPriceLabel": "Sell Price (per USDT)",
+    "paymentMethodsComma": "Payment Methods (comma separated)",
+    "cancel": "Cancel",
+    "addPaymentMethod": "Add Payment Method",
+    "adding": "Adding...",
+    "currencyCodePlaceholder": "GBP",
+    "currencyNamePlaceholder": "British Pound",
+    "fillAllFields": "Please fill in all required fields",
+    "addFailed": "Failed to add currency",
+    "enterPaymentMethod": "Enter new payment method name:",
+    "buyPriceWithSymbol": "Buy Price ({symbol} per USDT)",
+    "sellPriceWithSymbol": "Sell Price ({symbol} per USDT)"
+  },
+  "adminSettings": {
+    "title": "USDT Receiving Settings",
+    "description": "Configure wallet address and QR code for SELL_USDT orders",
+    "walletConfiguration": "Wallet Configuration",
+    "usdtWalletAddress": "USDT Wallet Address",
+    "enterUsdtWallet": "Enter USDT wallet address",
+    "networkName": "Network Name",
+    "qrCodeImageUrl": "QR Code Image URL",
+    "enterQrUrl": "https://example.com/qr.png",
+    "saveSettings": "Save Settings",
+    "saving": "Saving...",
+    "settingsSaved": "Settings saved successfully",
+    "settingsSaveFailed": "Failed to save settings",
+    "settingsLoadFailed": "Failed to load settings",
+    "invalidUrl": "Please enter a valid URL starting with http:// or https://",
+    "qrCodePreview": "QR Code Preview",
+    "failedToLoadImage": "Failed to load image",
+    "clickToEnlarge": "Click to enlarge"
   },
   "adminTransactions": {
     "title": "Transaction History",
@@ -246,7 +390,20 @@
     "system": "System",
     "previous": "Previous",
     "next": "Next",
-    "pageOf": "Page {page} of {pages}"
+    "pageOf": "Page {page} of {pages}",
+    "subtitle": "View system activity and audit logs",
+    "total": "Total: {count}",
+    "actions": {
+      "USER_REGISTER": "User Register",
+      "USER_LOGIN": "User Login",
+      "CREATE_ORDER": "Create Order",
+      "UPLOAD_PROOF": "Upload Proof",
+      "APPROVE_ORDER": "Approve Order",
+      "REJECT_ORDER": "Reject Order",
+      "UPDATE_RATE": "Update Rate",
+      "UPDATE_PROFILE": "Update Profile",
+      "UPDATE_WALLET": "Update Wallet"
+    }
   },
   "adminDashboard": {
     "title": "Admin Dashboard",
@@ -256,7 +413,11 @@
     "approvedOrders": "Approved Orders",
     "rejectedOrders": "Rejected Orders",
     "totalUsers": "Total Users",
-    "totalTransactions": "Total Transactions"
+    "totalTransactions": "Total Transactions",
+    "quickActions": "Quick Actions",
+    "systemStatus": "System Status",
+    "subtitle": "Manage exchange operations and users",
+    "usdtSettings": "USDT Settings"
   },
   "validation": {
     "required": "This field is required",

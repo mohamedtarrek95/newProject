@@ -71,14 +71,14 @@ export default function RegisterPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
             </div>
-            <span className="text-2xl font-bold text-white">USDT-Worldwide</span>
+            <span className="text-2xl font-bold text-white">{t('common.appName')}</span>
           </Link>
         </div>
 
         <Card premium>
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-white mb-2">{t('auth.registerTitle')}</h1>
-            <p className="text-surface-400 text-sm">Create your account to get started.</p>
+            <p className="text-surface-400 text-sm">{t('auth.createYourAccount')}</p>
           </div>
 
           {error && (
@@ -94,7 +94,7 @@ export default function RegisterPage() {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                placeholder="John"
+                placeholder={t('auth.firstNamePlaceholder')}
                 required
               />
               <Input
@@ -102,7 +102,7 @@ export default function RegisterPage() {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                placeholder="Doe"
+                placeholder={t('auth.lastNamePlaceholder')}
                 required
               />
             </div>
@@ -113,7 +113,7 @@ export default function RegisterPage() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="your@email.com"
+              placeholder={t('auth.yourEmail')}
               required
             />
 
@@ -123,7 +123,7 @@ export default function RegisterPage() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Min. 6 characters"
+              placeholder={t('auth.min6Chars')}
               required
             />
 
@@ -133,7 +133,7 @@ export default function RegisterPage() {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              placeholder="Confirm your password"
+              placeholder={t('auth.confirmYourPassword')}
               required
             />
 

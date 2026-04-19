@@ -52,7 +52,7 @@ export default function AdminOrdersPage() {
     }
   };
 
-  const handleReject = async (orderId) => {
+  const handle{t('adminOrders.reject')} = async (orderId) => {
     setActionLoading(orderId);
     setError('');
     try {
@@ -104,7 +104,7 @@ export default function AdminOrdersPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">{t('adminOrders.title')}</h1>
-        <p className="text-surface-400">Review and manage exchange orders</p>
+        <p className="text-surface-400">{t('adminOrders.subtitle')}</p>
       </div>
 
       {error && (
@@ -127,7 +127,7 @@ export default function AdminOrdersPage() {
             </select>
           </div>
           <span className="text-surface-400 text-sm whitespace-nowrap">
-            Total: {pagination.total} orders
+            {t('adminOrders.totalOrders', { count: pagination.total })}
           </span>
         </div>
       </Card>
@@ -148,13 +148,13 @@ export default function AdminOrdersPage() {
               <thead className="bg-surface-700/50">
                 <tr>
                   <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider w-10"></th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">User</th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Type</th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Amount</th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Rate</th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Status</th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Date</th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">Actions</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">{t('adminOrders.user')}</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">{t('adminOrders.type')}</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">{t('adminOrders.amount')}</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">{t('adminOrders.rate')}</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">{t('adminOrders.status')}</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">{t('adminOrders.date')}</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-surface-400 uppercase tracking-wider">{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-700">
@@ -177,7 +177,7 @@ export default function AdminOrdersPage() {
                         </button>
                       </td>
                       <td className="px-4 sm:px-6 py-4 text-sm text-white">
-                        {order.userId?.email || 'Unknown'}
+                        {order.userId?.email || t('adminOrders.unknown')}
                       </td>
                       <td className="px-4 sm:px-6 py-4 text-sm text-surface-300">
                         <div>
@@ -189,7 +189,7 @@ export default function AdminOrdersPage() {
                         {order.amount} {order.currency}
                       </td>
                       <td className="px-4 sm:px-6 py-4 text-sm text-surface-400">
-                        {order.currency} {order.exchangeRate?.toFixed(2) || 'N/A'} / USDT
+                        {order.currency} {order.exchangeRate?.toFixed(2) || t('adminOrders.unknown')} / USDT
                       </td>
                       <td className="px-4 sm:px-6 py-4">
                         {getStatusBadge(order.status)}
@@ -206,15 +206,15 @@ export default function AdminOrdersPage() {
                               onClick={() => handleApprove(order._id)}
                               disabled={actionLoading === order._id}
                             >
-                              {actionLoading === order._id ? '...' : 'Approve'}
+                              {actionLoading === order._id ? t('common.approving') : t('adminOrders.approve')}
                             </Button>
                             <Button
                               variant="danger"
                               size="sm"
-                              onClick={() => handleReject(order._id)}
+                              onClick={() => handle{t('adminOrders.reject')}(order._id)}
                               disabled={actionLoading === order._id}
                             >
-                              Reject
+                              {t('adminOrders.reject')}
                             </Button>
                           </div>
                         )}
@@ -224,7 +224,7 @@ export default function AdminOrdersPage() {
                       <tr>
                         <td colSpan="8" className="px-4 sm:px-6 py-4 bg-surface-800/50">
                           <div className="space-y-4">
-                            <h3 className="text-sm font-semibold text-white">Order Details</h3>
+                            <h3 className="text-sm font-semibold text-white">{t('adminOrders.orderDetailsTitle')}</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                               {order.paymentProof && (
                                 <Card className="p-4">
@@ -232,7 +232,7 @@ export default function AdminOrdersPage() {
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
-                                    Payment Proof
+                                    {t('adminOrders.paymentProof')}
                                   </h4>
                                   <div
                                     className="cursor-pointer hover:opacity-80 transition-opacity"
@@ -243,7 +243,7 @@ export default function AdminOrdersPage() {
                                       alt="Payment proof"
                                       className="h-32 w-full rounded border border-surface-600 object-cover"
                                     />
-                                    <p className="text-xs text-surface-400 mt-2 text-center">Click to enlarge</p>
+                                    <p className="text-xs text-surface-400 mt-2 text-center">{t('adminOrders.clickToEnlarge')}</p>
                                   </div>
                                 </Card>
                               )}
@@ -253,7 +253,7 @@ export default function AdminOrdersPage() {
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg>
-                                    Wallet Address (USDT Transfer Destination)
+                                    {t('adminOrders.walletAddress')}
                                   </h4>
                                   <div className="bg-surface-900 rounded p-3 border border-surface-700">
                                     <code className="text-sm text-cyan-400 break-all font-mono">
@@ -268,12 +268,27 @@ export default function AdminOrdersPage() {
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
-                                    Transaction ID (TXID)
+                                    {t('adminOrders.txid')}
                                   </h4>
                                   <div className="bg-surface-900 rounded p-3 border border-emerald-500/30">
                                     <code className="text-sm text-emerald-400 break-all font-mono">
                                       {order.txid}
                                     </code>
+                                  </div>
+                                </Card>
+                              )}
+                              {order.type === 'BUY_USDT' && order.paymentDetails && (
+                                <Card className="p-4">
+                                  <h4 className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    {t('adminOrders.paymentDetails')}
+                                  </h4>
+                                  <div className="bg-surface-900 rounded p-3 border border-surface-700">
+                                    <p className="text-sm text-amber-400 whitespace-pre-wrap">
+                                      {order.paymentDetails}
+                                    </p>
                                   </div>
                                 </Card>
                               )}
@@ -283,7 +298,7 @@ export default function AdminOrdersPage() {
                                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                       <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.099.154.232.17.325.015.093.034.302-.064.623z"/>
                                     </svg>
-                                    Telegram Username
+                                    {t('adminOrders.telegramUsername')}
                                   </h4>
                                   <div className="bg-surface-900 rounded p-3 border border-surface-700">
                                     <code className="text-sm text-blue-400 font-mono">

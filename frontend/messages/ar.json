@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "USDT-Worldwide",
+    "appName": "USDT-العالمية",
     "login": "تسجيل الدخول",
     "register": "التسجيل",
     "logout": "تسجيل الخروج",
@@ -31,7 +31,9 @@
     "paymentMethod": "طريقة الدفع",
     "paymentMethods": "طرق الدفع",
     "currency": "العملة",
-    "currencies": "العملات"
+    "currencies": "العملات",
+    "unknown": "غير معروف",
+    "approving": "..."
   },
   "auth": {
     "loginTitle": "تسجيل الدخول إلى USDT-Worldwide",
@@ -48,12 +50,25 @@
     "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
     "passwordMinLength": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
     "loggingIn": "جاري تسجيل الدخول...",
-    "creatingAccount": "جاري إنشاء الحساب..."
+    "creatingAccount": "جاري إنشاء الحساب...",
+    "welcomeBack": "مرحبًا بعودتك! يرجى إدخال بياناتك.",
+    "createYourAccount": "أنشئ حسابك للبدء.",
+    "min6Chars": "6 أحرف على الأقل",
+    "confirmYourPassword": "أكد كلمة مرورك",
+    "yourEmail": "بريدك@الإلكتروني.com",
+    "enterYourPassword": "أدخل كلمة المرور",
+    "firstNamePlaceholder": "الاسم الأول",
+    "lastNamePlaceholder": "اسم العائلة"
   },
   "nav": {
     "goToDashboard": "الذهاب إلى لوحة التحكم",
     "adminPanel": "لوحة الإدارة",
-    "newOrder": "طلب جديد"
+    "newOrder": "طلب جديد",
+    "dashboard": "لوحة التحكم",
+    "logout": "تسجيل الخروج",
+    "login": "تسجيل الدخول",
+    "register": "التسجيل",
+    "admin": "الإدارة"
   },
   "landing": {
     "heroTitle": "تبادل العملات إلى USDT",
@@ -75,7 +90,8 @@
     "step3Desc": "قدم دليل الدفع",
     "step4Title": "الحصول على الموافقة",
     "step4Desc": "الموافقة من الإدارة وتستلم الأموال",
-    "copyright": "2024 USDT-Worldwide. جميع الحقوق محفوظة."
+    "copyright": "2024 USDT-Worldwide. جميع الحقوق محفوظة.",
+    "secureReliableExchange": "تبادل آمن وموثوق"
   },
   "dashboard": {
     "title": "لوحة التحكم",
@@ -95,16 +111,21 @@
     "selectCurrency": "اختر العملة",
     "buyPrice": "سعر الشراء",
     "sellPrice": "سعر البيع",
-    "per": "لكل USDT"
+    "per": "لكل USDT",
+    "yourInternationalExchange": "لوحة التبادل الدولية الخاصة بك"
   },
   "exchange": {
     "title": "إنشاء طلب تبادل",
+    "subtitle": "إنشاء طلب تبادل جديد",
     "exchangeType": "نوع التبادل",
-    "egpToUsdtOption": "بيع USDT (ترسل USDT وتتلقى {currency})",
-    "usdtToEgpOption": "شراء USDT (ترسل {currency} وتتلقى USDT)",
+    "sellUsdtOption": "بيع USDT",
+    "buyUsdtOption": "شراء USDT",
+    "sellUsdt": "بيع USDT",
+    "buyUsdt": "شراء USDT",
     "amount": "المبلغ",
     "amountInEgp": "المبلغ بـ {currency}",
     "amountInUsdt": "المبلغ بـ USDT",
+    "amountInCurrency": "المبلغ بـ {symbol}",
     "createOrder": "إنشاء طلب",
     "creatingOrder": "جاري إنشاء الطلب...",
     "orderSummary": "ملخص الطلب",
@@ -118,7 +139,30 @@
     "backToDashboard": "العودة إلى لوحة التحكم",
     "selectCurrency": "اختر العملة",
     "selectPaymentMethod": "اختر طريقة الدفع",
-    "availablePaymentMethods": "طرق الدفع المتاحة"
+    "availablePaymentMethods": "طرق الدفع المتاحة",
+    "sellDescription": "ترسل USDT وتستقبل {currency}",
+    "buyDescription": "ترسل {currency} وتستقبل USDT",
+    "usdtWalletAddress": "عنوان محفظة USDT",
+    "enterUsdtWalletPlaceholder": "أدخل عنوان محفظة USDT الخاصة بك",
+    "telegramUsername": "اسم مستخدم تيليجرام (اختياري)",
+    "telegramUsernamePlaceholder": "@username",
+    "paymentDetails": "تفاصيل الدفع",
+    "paymentDetailsPlaceholder": "أدخل المحفظة أو معلومات البنك أو الملاحظات للدفع",
+    "contactSupport": "تواصل معنا على تيليجرام",
+    "sendUsdtToWallet": "أرسل USDT إلى محفظتنا",
+    "qrNotConfigured": "لم يتم تكوين رمز QR بعد",
+    "walletNotConfigured": "لم يتم تكوين عنوان المحفظة بعد",
+    "network": "الشبكة",
+    "networkLabel": "الشبكة: {network}",
+    "warningSendOnly": "تحذير: أرسل USDT فقط على شبكة {network}. قد يؤدي الإرسال على شبكة أخرى إلى فقدان الأموال.",
+    "adminConfigureWallet": "المشرف: يرجى تكوين عنوان محفظة USDT ورمز QR في إعدادات الإدارة.",
+    "networkTrc20": "تستخدم هذه المعاملة شبكة TRC20",
+    "networkTrc20Label": "الشبكة: تستخدم هذه المعاملة شبكة TRC20",
+    "copyAddress": "نسخ العنوان",
+    "yourUsdtWallet": "محفظة USDT الخاصة بك",
+    "failedToLoadQr": "فشل تحميل صورة QR",
+    "amountPlaceholder": "0.00",
+    "telegramSupport": "تواصل مع الدعم على تيليجرام"
   },
   "orders": {
     "title": "طلباتي",
@@ -126,6 +170,8 @@
     "noOrders": "لم تقم بإنشاء أي طلبات بعد.",
     "createFirstOrder": "إنشاء أول طلب لك",
     "viewDetails": "عرض التفاصيل",
+    "subtitle": "عرض وإدارة طلبات الصرف الخاصة بك",
+    "rate": "{currency} {rate} / USDT",
     "status": {
       "pending": "قيد الانتظار",
       "approved": "موافق عليه",
@@ -142,6 +188,7 @@
     "orderDetails": "تفاصيل الطلب",
     "orderStatus": "حالة الطلب",
     "exchangeType": "نوع التبادل",
+    "orderType": "نوع الطلب",
     "amount": "المبلغ",
     "rate": "سعر الصرف",
     "youWill": "ست",
@@ -177,7 +224,35 @@
     "backToOrders": "العودة إلى الطلبات",
     "statusApproved": "الموافقة عليه",
     "statusRejected": "مرفوض",
-    "statusPending": "قيد الانتظار"
+    "statusPending": "قيد الانتظار",
+    "userInfo": "معلومات المستخدم",
+    "currency": "العملة",
+    "paymentMethod": "طريقة الدفع",
+    "bankTransfer": "تحويل مصرفي",
+    "youWillReceive": "ستستلم",
+    "youWillPay": "ستدفع",
+    "network": "الشبكة",
+    "plasma": "بلازما",
+    "usdtWalletAddress": "عنوان محفظة USDT",
+    "receiveAddress": "عنوان الاستقبال",
+    "contactUsOnTelegram": "تواصل معنا على تيليجرام",
+    "orderCreatedContact": "تم إنشاء طلبك بنجاح. يرجى التواصل معنا على تيليجرام لإكمال طلبك.",
+    "submitTxid": "إرسال معرف المعاملة (TXID)",
+    "txidDescription": "بعد إرسال USDT إلى محفظتنا، يرجى إرسال معرف المعاملة (TXID) لمساعدتنا في التحقق من دفعتك.",
+    "enterTxid": "أدخل معرف المعاملة (TXID)",
+    "submitting": "جاري الإرسال...",
+    "submitTxidBtn": "إرسال TXID",
+    "txidRequired": "معرف المعاملة مطلوب",
+    "txidSubmitted": "تم إرسال معرف المعاملة بنجاح",
+    "txidFailed": "فشل إرسال معرف المعاملة",
+    "txidSubmittedBadge": "تم إرسال معرف المعاملة (TXID)",
+    "copyTxid": "نسخ TXID",
+    "clickToEnlarge": "انقر للتكبير",
+    "clickToUpload": "انقر لتحميل دليل الدفع",
+    "fileTypes": "PNG، JPG حتى 5 ميجابايت",
+    "clickImageToEnlarge": "انقر على الصورة للتكبير",
+    "close": "إغلاق",
+    "paymentDetails": "تفاصيل الدفع"
   },
   "adminOrders": {
     "title": "إدارة الطلبات",
@@ -191,7 +266,19 @@
     "date": "التاريخ",
     "approve": "موافقة",
     "reject": "رفض",
-    "ordersCount": "{count} طلبات"
+    "ordersCount": "{count} طلبات",
+    "total": "المجموع",
+    "orderDetailsTitle": "تفاصيل الطلب",
+    "paymentProof": "دليل الدفع",
+    "walletAddress": "عنوان المحفظة (وجهة تحويل USDT)",
+    "txid": "معرف المعاملة (TXID)",
+    "paymentDetails": "تفاصيل الدفع",
+    "telegramUsername": "اسم مستخدم تيليجرام",
+    "clickToEnlarge": "انقر للتكبير",
+    "subtitle": "مراجعة وإدارة طلبات الصرف",
+    "totalOrders": "المجموع: {count} طلبات",
+    "approving": "...",
+    "unknown": "غير معروف"
   },
   "adminUsers": {
     "title": "إدارة المستخدمين",
@@ -202,7 +289,15 @@
     "joined": "تاريخ التسجيل",
     "notSet": "غير محدد",
     "admin": "مدير",
-    "user": "مستخدم"
+    "user": "مستخدم",
+    "promoting": "جاري الترقية...",
+    "demoting": "جاري نزع الإدارة...",
+    "makeAdmin": "جعل مدير",
+    "removeAdmin": "إزالة الإدارة",
+    "subtitle": "إدارة المستخدمين المسجلين والأدوار",
+    "loadFailed": "فشل تحميل المستخدمين",
+    "roleUpdateFailed": "فشل تحديث الدور",
+    "roleUpdatedTo": "تم تحديث دور المستخدم إلى {role}"
   },
   "adminRate": {
     "title": "تعيين سعر الصرف",
@@ -215,7 +310,23 @@
     "rateUpdated": "تم تحديث سعر الصرف بنجاح!",
     "rateUpdateFailed": "فشل تحديث السعر",
     "rateNote": "ملاحظة: لن يؤثر تغيير السعر على الطلبات القائمة. ستستخدم الطلبات الجديدة فقط السعر المحدث.",
-    "validRateError": "الرجاء إدخال رقم موجب صالح"
+    "validRateError": "الرجاء إدخال رقم موجب صالح",
+    "manageCurrencies": "إدارة العملات",
+    "paymentMethodsCount": "{count} طرق دفع",
+    "subtitle": "نظرة عامة على جميع أسعار العملات والأسعار",
+    "perUsdt": "لكل USDT",
+    "paymentMethodCount": "{count} طريقة دفع",
+    "paymentMethodsCount": "{count} طرق دفع",
+    "toUpdateRatesNote": "لتحديث الأسعار، انقر على \"إدارة العملات\" أعلاه أو انتقل إلى صفحة العملات في لوحة الإدارة.",
+    "paymentMethod": "{count} طريقة دفع",
+    "paymentMethods": "{count} طرق دفع",
+    "currencyNames": {
+      "EGP": "الجنيه المصري",
+      "USD": "الدولار الأمريكي",
+      "EUR": "اليورو",
+      "GBP": "الجنيه الإسترليني",
+      "AED": "الدرهم الإماراتي"
+    }
   },
   "adminCurrencies": {
     "title": "إدارة العملات",
@@ -224,11 +335,47 @@
     "buyPrice": "سعر الشراء",
     "sellPrice": "سعر البيع",
     "paymentMethods": "طرق الدفع",
-    "updated": "تم تحديث العملة بنجاح!",
+    "updated": "تم إضافة/تحديث العملة بنجاح!",
     "updateFailed": "فشل تحديث العملة",
     "updating": "جاري التحديث...",
     "save": "حفظ التغييرات",
-    "per": "لكل USDT"
+    "per": "لكل USDT",
+    "addCurrency": "إضافة عملة",
+    "addNewCurrency": "إضافة عملة جديدة",
+    "currencyCode": "رمز العملة (مثال: GBP، AED)",
+    "currencyName": "اسم العملة",
+    "buyPriceLabel": "سعر الشراء (لكل USDT)",
+    "sellPriceLabel": "سعر البيع (لكل USDT)",
+    "paymentMethodsComma": "طرق الدفع (مفصولة بفواصل)",
+    "cancel": "إلغاء",
+    "addPaymentMethod": "إضافة طريقة دفع",
+    "adding": "جاري الإضافة...",
+    "currencyCodePlaceholder": "GBP",
+    "currencyNamePlaceholder": "الجنيه الإسترليني",
+    "fillAllFields": "يرجى ملء جميع الحقول المطلوبة",
+    "addFailed": "فشل إضافة العملة",
+    "enterPaymentMethod": "أدخل اسم طريقة الدفع الجديدة:",
+    "buyPriceWithSymbol": "سعر الشراء ({symbol} لكل USDT)",
+    "sellPriceWithSymbol": "سعر البيع ({symbol} لكل USDT)"
+  },
+  "adminSettings": {
+    "title": "إعدادات استقبال USDT",
+    "description": "تكوين عنوان المحفظة ورمز QR لطلبات بيع USDT",
+    "walletConfiguration": "تكوين المحفظة",
+    "usdtWalletAddress": "عنوان محفظة USDT",
+    "enterUsdtWallet": "أدخل عنوان محفظة USDT",
+    "networkName": "اسم الشبكة",
+    "qrCodeImageUrl": "رابط صورة رمز QR",
+    "enterQrUrl": "https://example.com/qr.png",
+    "saveSettings": "حفظ الإعدادات",
+    "saving": "جاري الحفظ...",
+    "settingsSaved": "تم حفظ الإعدادات بنجاح",
+    "settingsSaveFailed": "فشل حفظ الإعدادات",
+    "settingsLoadFailed": "فشل تحميل الإعدادات",
+    "invalidUrl": "يرجى إدخال رابط صالح يبدأ بـ http:// أو https://",
+    "qrCodePreview": "معاينة رمز QR",
+    "failedToLoadImage": "فشل تحميل الصورة",
+    "clickToEnlarge": "انقر للتكبير"
   },
   "adminTransactions": {
     "title": "سجل المعاملات",
@@ -242,7 +389,20 @@
     "system": "النظام",
     "previous": "السابق",
     "next": "التالي",
-    "pageOf": "صفحة {page} من {pages}"
+    "pageOf": "صفحة {page} من {pages}",
+    "subtitle": "عرض نشاط النظام وسجلات التدقيق",
+    "total": "المجموع: {count}",
+    "actions": {
+      "USER_REGISTER": "تسجيل مستخدم",
+      "USER_LOGIN": "تسجيل دخول",
+      "CREATE_ORDER": "إنشاء طلب",
+      "UPLOAD_PROOF": "رفع إثبات",
+      "APPROVE_ORDER": "الموافقة على طلب",
+      "REJECT_ORDER": "رفض طلب",
+      "UPDATE_RATE": "تحديث السعر",
+      "UPDATE_PROFILE": "تحديث الملف الشخصي",
+      "UPDATE_WALLET": "تحديث المحفظة"
+    }
   },
   "adminDashboard": {
     "title": "لوحة تحكم الإدارة",
@@ -252,7 +412,11 @@
     "approvedOrders": "الطلبات الموافق عليها",
     "rejectedOrders": "الطلبات المرفوضة",
     "totalUsers": "إجمالي المستخدمين",
-    "totalTransactions": "إجمالي المعاملات"
+    "totalTransactions": "إجمالي المعاملات",
+    "quickActions": "إجراءات سريعة",
+    "systemStatus": "حالة النظام",
+    "subtitle": "إدارة عمليات الصرف والمستخدمين",
+    "usdtSettings": "إعدادات USDT"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
