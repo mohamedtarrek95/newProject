@@ -169,17 +169,7 @@ export const orderAPI = {
 
 export const settingsAPI = {
   get: () => api.get('/settings'),
-  update: (data) => api.put('/settings', data),
-  uploadQr: (file) => {
-    const formData = new FormData();
-    formData.append('qrCode', file);
-    const token = api.getAccessToken();
-    return fetch(`${api.baseUrl}/settings/qr-upload`, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` },
-      body: formData
-    }).then(res => res.json());
-  }
+  update: (data) => api.put('/settings', data)
 };
 
 export const rateAPI = {

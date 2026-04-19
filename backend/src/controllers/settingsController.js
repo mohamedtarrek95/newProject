@@ -44,20 +44,4 @@ exports.updateSettings = async (req, res, next) => {
   }
 };
 
-exports.uploadQrCode = async (req, res, next) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
-    }
-    const qrCodeUrl = `/uploads/${req.file.filename}`;
-    let settings = await Settings.findOne({ key: SETTINGS_KEY });
-    if (!settings) {
-      settings = new Settings({ key: SETTINGS_KEY });
-    }
-    settings.usdtQrCodeUrl = qrCodeUrl;
-    await settings.save();
-    res.json({ usdtQrCodeUrl: settings.usdtQrCodeUrl });
-  } catch (error) {
-    next(error);
-  }
-};
+// uploadQrCode removed - QR code is now set via updateSettings with usdtQrCodeUrl field

@@ -9,7 +9,6 @@ export default function AdminSettingsPage() {
   const [settings, setSettings] = useState({ usdtWalletAddress: '', usdtNetwork: 'TRC20', usdtQrCodeUrl: null });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [uploadingQr, setUploadingQr] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [lightboxImage, setLightboxImage] = useState(null);
@@ -30,14 +29,30 @@ export default function AdminSettingsPage() {
     }
   };
 
+  const validateUrl = (url) => {
+    if (!url) return true;
+    try {
+      const parsed = new URL(url);
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  };
+
   const handleSave = async () => {
+    if (settings.usdtQrCodeUrl && !validateUrl(settings.usdtQrCodeUrl)) {
+      setError('Please enter a valid URL starting with http:// or https://');
+      return;
+    }
+
     setSaving(true);
     setError('');
     setMessage('');
     try {
       const updated = await settingsAPI.update({
         usdtWalletAddress: settings.usdtWalletAddress,
-        usdtNetwork: settings.usdtNetwork
+        usdtNetwork: settings.usdtNetwork,
+        usdtQrCodeUrl: settings.usdtQrCodeUrl || null
       });
       setSettings(updated);
       setMessage('Settings saved successfully');
@@ -45,27 +60,6 @@ export default function AdminSettingsPage() {
       setError(err.message || 'Failed to save settings');
     } finally {
       setSaving(false);
-    }
-  };
-
-  const handleQrUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      setError('Please upload an image file');
-      return;
-    }
-    setUploadingQr(true);
-    setError('');
-    setMessage('');
-    try {
-      const data = await settingsAPI.uploadQr(file);
-      setSettings(prev => ({ ...prev, usdtQrCodeUrl: data.usdtQrCodeUrl }));
-      setMessage('QR code uploaded successfully');
-    } catch (err) {
-      setError(err.message || 'Failed to upload QR code');
-    } finally {
-      setUploadingQr(false);
     }
   };
 
@@ -104,6 +98,13 @@ export default function AdminSettingsPage() {
             onChange={(e) => setSettings(prev => ({ ...prev, usdtNetwork: e.target.value }))}
             placeholder="TRC20"
           />
+          <Input
+            label="QR Code Image URL"
+            type="url"
+            value={settings.usdtQrCodeUrl || ''}
+            onChange={(e) => setSettings(prev => ({ ...prev, usdtQrCodeUrl: e.target.value }))}
+            placeholder="https://example.com/qr.png"
+          />
           <Button onClick={handleSave} disabled={saving}>
             {saving ? (
               <span className="flex items-center gap-2 justify-center">
@@ -117,50 +118,33 @@ export default function AdminSettingsPage() {
         </div>
       </Card>
 
-      <Card>
-        <h2 className="text-lg font-semibold text-white mb-6">QR Code</h2>
-        {settings.usdtQrCodeUrl && (
-          <div className="mb-6">
-            <div
-              className="relative group cursor-pointer overflow-hidden rounded-lg border border-surface-600 hover:border-blue-500 transition-colors inline-block"
-              onClick={() => setLightboxImage(settings.usdtQrCodeUrl)}
-            >
-              <img
-                src={settings.usdtQrCodeUrl}
-                alt="USDT QR Code"
-                className="h-48 w-auto object-contain bg-surface-900"
-              />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                  </svg>
-                </div>
+      {settings.usdtQrCodeUrl && (
+        <Card>
+          <h2 className="text-lg font-semibold text-white mb-6">QR Code Preview</h2>
+          <div
+            className="relative group cursor-pointer overflow-hidden rounded-lg border border-surface-600 hover:border-blue-500 transition-colors inline-block"
+            onClick={() => setLightboxImage(settings.usdtQrCodeUrl)}
+          >
+            <img
+              src={settings.usdtQrCodeUrl}
+              alt="USDT QR Code"
+              className="h-48 w-auto object-contain bg-surface-900"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.parentNode.innerHTML += '<p class="text-red-400 text-sm mt-2">Failed to load image</p>';
+              }}
+            />
+            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                </svg>
               </div>
             </div>
-            <p className="text-xs text-surface-500 mt-2">Click to enlarge</p>
           </div>
-        )}
-        <div>
-          <label className="block w-full cursor-pointer">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleQrUpload}
-              className="hidden"
-            />
-            <div className="border-2 border-dashed border-surface-600 rounded-lg p-6 text-center hover:border-surface-500 transition-colors">
-              <svg className="w-8 h-8 text-surface-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <p className="text-sm text-surface-400">
-                {uploadingQr ? 'Uploading...' : 'Click to upload QR code image'}
-              </p>
-              <p className="text-xs text-surface-500 mt-1">PNG, JPG up to 5MB</p>
-            </div>
-          </label>
-        </div>
-      </Card>
+          <p className="text-xs text-surface-500 mt-2">Click to enlarge</p>
+        </Card>
+      )}
 
       {lightboxImage && (
         <div
@@ -181,6 +165,9 @@ export default function AdminSettingsPage() {
               alt="QR Code full size"
               className="max-w-full max-h-[85vh] rounded-lg object-contain"
               onClick={(e) => e.stopPropagation()}
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
             />
           </div>
         </div>
