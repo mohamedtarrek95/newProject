@@ -82,6 +82,7 @@ export default function ExchangePage() {
   const handleTypeChange = (newType) => {
     setType(newType);
     setPaymentMethod('');
+    setPaymentDetails('');
   };
 
   const displayedPrice = type === 'SELL_USDT' ? currentSellPrice : currentBuyPrice;
@@ -110,7 +111,7 @@ export default function ExchangePage() {
         paymentMethod,
         walletAddress: isBuy ? walletAddress : null,
         telegramUsername: telegramUsername || null,
-        paymentDetails: isBuy ? paymentDetails : null
+        paymentDetails: isBuy ? null : paymentDetails
       });
       setSuccess(t('exchange.orderCreated'));
       setTimeout(() => {
@@ -220,15 +221,20 @@ export default function ExchangePage() {
               />
             )}
 
-            {isBuyOrder && (
-              <Input
-                label={t('exchange.paymentDetails')}
-                type="text"
-                value={paymentDetails}
-                onChange={(e) => setPaymentDetails(e.target.value)}
-                placeholder={t('exchange.paymentDetailsPlaceholder')}
-                required
-              />
+            {!isBuyOrder && (
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-surface-200">
+                  {t('exchange.paymentDetails')}
+                </label>
+                <textarea
+                  className="w-full px-3 py-2 bg-surface-800 border border-surface-600 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                  value={paymentDetails}
+                  onChange={(e) => setPaymentDetails(e.target.value)}
+                  placeholder={t('exchange.paymentDetailsPlaceholder')}
+                  rows={3}
+                  required={!isBuyOrder}
+                />
+              </div>
             )}
 
             <Input
@@ -250,7 +256,7 @@ export default function ExchangePage() {
             <Button
               type="submit"
               className="w-full"
-              disabled={submitting || !amount || !paymentMethod || (isBuyOrder && !walletAddress) || (isBuyOrder && !paymentDetails)}
+              disabled={submitting || !amount || !paymentMethod || (isBuyOrder && !walletAddress) || (!isBuyOrder && !paymentDetails)}
             >
               {submitting ? (
                 <span className="flex items-center gap-2 justify-center">
