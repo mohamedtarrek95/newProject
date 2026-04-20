@@ -252,7 +252,10 @@
     "fileTypes": "PNG، JPG حتى 5 ميجابايت",
     "clickImageToEnlarge": "انقر على الصورة للتكبير",
     "close": "إغلاق",
-    "paymentDetails": "تفاصيل الدفع"
+    "paymentDetails": "تفاصيل الدفع",
+    "sendUsdtToWallet": "أرسل USDT إلى محفظتنا",
+    "networkLabel": "الشبكة: {network}",
+    "copyAddress": "نسخ العنوان"
   },
   "adminOrders": {
     "title": "إدارة الطلبات",

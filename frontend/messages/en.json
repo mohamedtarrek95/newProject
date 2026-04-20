@@ -253,7 +253,10 @@
     "fileTypes": "PNG, JPG up to 5MB",
     "clickImageToEnlarge": "Click image to enlarge",
     "close": "Close",
-    "paymentDetails": "Payment Details"
+    "paymentDetails": "Payment Details",
+    "sendUsdtToWallet": "Send USDT to our wallet",
+    "networkLabel": "Network: {network}",
+    "copyAddress": "Copy address"
   },
   "adminOrders": {
     "title": "Manage Orders",
